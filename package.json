@@ -1,0 +1,27 @@
+{
+  "name": "reading-management-web",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "yu-ta-9",
+  "license": "MIT",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ]
+  },
+  "nohoist": [],
+  "scripts": {
+    "cl:start": "yarn workspace client start",
+    "sr:start": "yarn workspace server start"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.8.0",
+    "@typescript-eslint/parser": "^5.8.0",
+    "eslint": "^8.5.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.27.1",
+    "prettier": "^2.5.1"
+  }
+}
