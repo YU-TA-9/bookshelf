@@ -16,4 +16,9 @@ WIP
 
 ## Server
 
-WIP
+### getting started
+
+```shell
+$ yarn workspace server migration:run
+$ yarn workspace server start
+```
