@@ -1,3 +1,4 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -9,6 +10,7 @@ import { BooksModule } from './books/books.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: './.env',
     }),
     TypeOrmModule.forRoot({
       type: 'sqlite',
