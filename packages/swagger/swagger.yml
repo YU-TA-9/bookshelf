@@ -19,7 +19,31 @@ paths:
                 items:
                   $ref: '#/components/schemas/Book'
     post:
-      description: '本データ一覧取得 TODO: ヘッダーにユーザ情報付与'
+      description: 本データ登録（楽天API使用）
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - isbn
+              properties:
+                isbn:
+                  type: string
+                  description: ISBNコード
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema: 
+                type: array
+                items:
+                  $ref: '#/components/schemas/Book'
+  /books/self:
+    post:
+      description: 本データ登録（手動）
       requestBody:
         required: true
         content:
@@ -51,7 +75,6 @@ paths:
                   type: integer
                 image_path: 
                   type: string
-
       responses:
         '200':
           description: OK
