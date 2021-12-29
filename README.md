@@ -12,7 +12,9 @@
 
 ## Client
 
-WIP
+- React v17.0.2
+- Webpack
+- Babel
 
 ## Server
 
