@@ -30,37 +30,37 @@ export class Book implements IBook {
   id: number;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: '書籍名' })
   name: string;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: '著者名' })
   author: string;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: '出版社名' })
   publisher: string;
 
   @Column({ type: 'simple-enum', enum: Status })
   @ApiProperty({
-    description: '1: 未読 2: 読書中 3: 読了 4: 中断',
+    description: '読書状態 1: 未読 2: 読書中 3: 読了 4: 中断',
     enum: statusValues,
   })
   status: Status;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: 'カテゴリー' })
   category: number;
 
   @Column()
-  @ApiProperty()
+  @ApiProperty({ description: '画像パス' })
   image_path: string;
 
   @CreateDateColumn()
-  @ApiProperty()
+  @ApiProperty({ description: '追加日' })
   readonly createdAt?: Date;
 
   @UpdateDateColumn()
-  @ApiProperty()
+  @ApiProperty({ description: '更新日' })
   readonly updatedAt?: Date;
 }

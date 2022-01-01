@@ -1,101 +1,74 @@
 openapi: 3.0.0
-info:
-  version: 1.0.0
-  title: '読書管理アプリ Swagger'
-servers:
-  - url: http://localhost:3000/api
-    description: local
 paths:
-  /books/:
+  /:
     get:
-      description: '本データ一覧取得 TODO: ヘッダーにユーザ情報付与'
+      operationId: AppController_getHello
+      parameters: []
       responses:
         '200':
-          description: OK
+          description: ''
+  /books:
+    get:
+      operationId: BooksController_getBookList
+      parameters: []
+      responses:
+        '200':
+          description: ''
           content:
             application/json:
-              schema: 
+              schema:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
     post:
-      description: 本データ登録（楽天API使用）
+      operationId: BooksController_createBook
+      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - isbn
-              properties:
-                isbn:
-                  type: string
-                  description: ISBNコード
+              $ref: '#/components/schemas/CreateBookDto'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: ''
           content:
             application/json:
-              schema: 
-                type: array
-                items:
-                  $ref: '#/components/schemas/Book'
+              schema:
+                $ref: '#/components/schemas/Book'
   /books/self:
     post:
-      description: 本データ登録（手動）
+      operationId: BooksController_createBookSelf
+      parameters: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - name
-                - author
-                - publisher
-                - status
-                - category
-                - image_path
-              properties:
-                name:
-                  type: string
-                author:
-                  type: string
-                publisher:
-                  type: string
-                status:
-                  type: integer
-                  enum:
-                   - 1
-                   - 2
-                   - 3
-                   - 4
-                category: 
-                  type: integer
-                image_path: 
-                  type: string
+              $ref: '#/components/schemas/CreateBookSelfDto'
       responses:
-        '200':
-          description: OK
+        '201':
+          description: ''
           content:
             application/json:
-              schema: 
-                type: array
-                items:
-                  $ref: '#/components/schemas/Book'
-            
+              schema:
+                $ref: '#/components/schemas/Book'
+info:
+  title: Reading Management API
+  description: API Docs
+  version: '1.0'
+  contact: {}
+tags: []
+servers:
+  - url: localhost:3000/api
+    description: local
 components:
   schemas:
     Book:
       type: object
-      required:
-        - ""
       properties:
-        id: 
-          type: integer
-          format: int64
-          description: ID
+        id:
+          type: number
         name:
           type: string
           description: 書籍名
@@ -104,27 +77,77 @@ components:
           description: 著者名
         publisher:
           type: string
-          description: 出版社
+          description: 出版社名
         status:
-          type: integer
-          description: | 
-            読書状態
-
-            1: 未読
-            2: 読書中
-            3: 読了
-            4: 中断
+          type: number
+          description: '読書状態 1: 未読 2: 読書中 3: 読了 4: 中断'
           enum:
             - 1
             - 2
             - 3
             - 4
         category:
-          type: string
+          type: number
           description: カテゴリー
         image_path:
           type: string
-          description: 画像パス ※楽天APIから取得したパスをそのまま使う想定
-        created_at:
+          description: 画像パス
+        createdAt:
+          format: date-time
           type: string
           description: 追加日
+        updatedAt:
+          format: date-time
+          type: string
+          description: 更新日
+      required:
+        - id
+        - name
+        - author
+        - publisher
+        - status
+        - category
+        - image_path
+        - createdAt
+        - updatedAt
+    CreateBookSelfDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: 書籍名
+        author:
+          type: string
+          description: 著者名
+        publisher:
+          type: string
+          description: 出版社名
+        status:
+          type: number
+          description: '読書状態 1: 未読 2: 読書中 3: 読了 4: 中断'
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        category:
+          type: number
+          description: カテゴリー
+        image_path:
+          type: string
+          description: 画像パス
+      required:
+        - name
+        - author
+        - publisher
+        - status
+        - category
+        - image_path
+    CreateBookDto:
+      type: object
+      properties:
+        isbn:
+          type: string
+          description: ISBNコード
+      required:
+        - isbn

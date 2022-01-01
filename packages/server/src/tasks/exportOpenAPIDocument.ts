@@ -24,7 +24,7 @@ const bootstrap = async (): Promise<void> => {
     skipInvalid: true,
     noRefs: true,
   });
-  const yamlPath = path.join('..', 'swagger/swagger-auto.yml');
+  const yamlPath = path.join('..', 'swagger/swagger.yml');
 
   await fs.writeFile(yamlPath, yamlDocument);
 };

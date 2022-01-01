@@ -4,5 +4,5 @@ export const swaggerConfig = new DocumentBuilder()
   .setTitle('Reading Management API')
   .setDescription('API Docs')
   .setVersion('1.0')
-  .addTag('Tag')
+  .addServer('localhost:3000/api', 'local')
   .build();
