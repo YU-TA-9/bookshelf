@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import { ApiBody, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
-import { BooksService } from 'src/books/books.service';
+import { BooksService } from '../books/books.service';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
@@ -10,11 +11,17 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  getBookList() {
+  @HttpCode(200)
+  @ApiOkResponse({ type: Book, isArray: true })
+  getBookList(): Promise<Book[]> {
     return this.booksService.getBookList();
   }
 
   @Post('/self')
+  @ApiBody({
+    type: CreateBookSelfDto,
+  })
+  @ApiCreatedResponse({ type: Book })
   async createBookSelf(
     @Body() createBookSelfDto: CreateBookSelfDto,
   ): Promise<Book> {
@@ -22,6 +29,7 @@ export class BooksController {
   }
 
   @Post()
+  @ApiCreatedResponse({ type: Book })
   createBook(@Body() createBookDto: CreateBookDto): Observable<Promise<Book>> {
     return this.booksService.createBook(createBookDto);
   }

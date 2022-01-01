@@ -1,7 +1,8 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
 export class CreateBookDto {
-  /** ISBNコード */
+  @ApiProperty({ description: 'ISBNコード' })
   @IsNotEmpty()
   isbn: string;
 }

@@ -1,8 +1,8 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { map } from 'rxjs';
-import { Book } from 'src/books/book.entity';
+import { map, Observable } from 'rxjs';
+import { Book } from '../books/book.entity';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
@@ -15,7 +15,7 @@ export class BooksService {
     private httpService: HttpService,
   ) {}
 
-  async getBookList() {
+  async getBookList(): Promise<Book[]> {
     return await this.booksRepository.find();
   }
 
@@ -32,7 +32,7 @@ export class BooksService {
     return await this.booksRepository.save(book);
   }
 
-  createBook(createBookDto: CreateBookDto) {
+  createBook(createBookDto: CreateBookDto): Observable<Promise<Book>> {
     return this.httpService
       .get(
         `https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&isbn=${createBookDto.isbn}&applicationId=${process.env.RAKUTEN_APP_ID}`,
