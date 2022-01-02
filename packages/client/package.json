@@ -5,15 +5,16 @@
   "license": "MIT",
   "scripts": {
     "dev": "webpack-dev-server --open",
-    "build": "webpack"
+    "build": "webpack",
+    "openapi-generator:local": "npx openapi-generator-cli generate -i ../swagger/swagger.yml -g typescript-axios -o ./src/api/generated --additional-properties=arrowUnicodeIdentifiers=true"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",
-    "@babel/plugin-transform-runtime": "^7.16.5",
+    "@babel/plugin-transform-runtime": "^7.16.7",
     "@babel/preset-env": "^7.16.5",
     "@babel/preset-react": "^7.16.5",
     "@babel/preset-typescript": "^7.16.5",
-    "@babel/runtime": "^7.16.5",
+    "@openapitools/openapi-generator-cli": "^2.4.23",
     "@types/react": "^17.0.37",
     "@types/react-dom": "^17.0.11",
     "babel-loader": "^8.2.3",
@@ -25,6 +26,7 @@
     "webpack-dev-server": "^4.7.1"
   },
   "dependencies": {
+    "@babel/runtime": "^7.16.7",
     "@emotion/react": "^11.7.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
