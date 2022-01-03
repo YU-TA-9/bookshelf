@@ -12,8 +12,14 @@
   },
   "nohoist": [],
   "scripts": {
+    "prepare": "husky install",
     "cl": "yarn workspace client",
     "sr": "yarn workspace server"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn sr swagger:check"
+    }
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.8.0",
@@ -22,6 +28,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.27.1",
+    "husky": "^7.0.4",
     "prettier": "^2.5.1"
   }
 }

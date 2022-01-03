@@ -22,7 +22,8 @@
     "typeorm": "typeorm",
     "migration:generate": "yarn build && yarn typeorm migration:generate",
     "migration:run": "yarn build && yarn typeorm migration:run",
-    "swagger:generate": "yarn build && ts-node ./dist/src/tasks/exportOpenAPIDocument.js"
+    "swagger:generate": "yarn build && ts-node ./dist/src/tasks/exportOpenAPIDocument.js",
+    "swagger:check": "yarn build && ts-node ./dist/src/tasks/checkOpenAPIDocument.js"
   },
   "dependencies": {
     "@nestjs/axios": "^0.0.3",
