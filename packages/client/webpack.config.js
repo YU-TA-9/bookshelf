@@ -7,12 +7,17 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'bundle.js',
+    assetModuleFilename: 'assets/[hash][ext][query]',
   },
   resolve: {
     extensions: ['.js', 'jsx', '.ts', '.tsx'],
   },
   module: {
     rules: [
+      {
+        test: /\.(png|jpg)$/,
+        type: 'asset/resource',
+      },
       {
         test: [/\.ts$/, /\.tsx$/],
         use: [
