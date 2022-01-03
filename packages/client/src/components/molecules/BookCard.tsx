@@ -3,6 +3,7 @@ import { css } from '@emotion/react';
 import { fontSize } from '../../styles/fontSize';
 import { color } from '../../styles/color';
 import { Button } from '../atoms/Button';
+import * as sampleImage from '../../assets/150x200.png';
 
 type Props = {
   title: string;
@@ -12,6 +13,7 @@ type Props = {
 const card = css`
   width: 210px;
   height: 280px;
+  background: #fffffe;
   border: 4px solid #094067;
   border-radius: 10px;
   padding: 8px;
@@ -35,10 +37,11 @@ const titleText = css`
 `;
 
 export const BookCard = ({ title, onClick }: Props) => {
+  console.log(sampleImage);
   return (
     <div css={card}>
       <div css={imageWrap}>
-        <img alt="" src="/assets/150x200.png"></img>
+        <img alt="" src={sampleImage}></img>
       </div>
       <p css={titleText}>{title}</p>
       <div>

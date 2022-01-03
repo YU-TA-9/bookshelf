@@ -9,9 +9,23 @@ type Props = {
 const background = css`
   z-index: 1;
   position: relative;
-  width: 1512px;
-  height: 982px;
+  width: 100%;
+  height: 100%;
   background: #e4e4e4;
+
+  // FIXME: 仮で置いている
+  &:before {
+    content: '';
+    display: block;
+    padding-top: 100%;
+  }
+`;
+
+// FIXME: 仮で置いている
+const content = css`
+  position: absolute;
+  top: 124px;
+  left: 302px;
 `;
 
 export const MainTemplate = ({ children }: Props) => {
@@ -19,7 +33,7 @@ export const MainTemplate = ({ children }: Props) => {
     <div css={background}>
       <Header />
       <Sidebar />
-      <div>{children}</div>
+      <div css={content}>{children}</div>
     </div>
   );
 };

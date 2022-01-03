@@ -5,7 +5,7 @@ import { HeaderText } from '../atoms/HeaderText';
 const header = css`
   z-index: 1000;
   position: absolute;
-  width: 1512px;
+  width: 100%;
   height: 124px;
   left: 0;
   top: 0;
