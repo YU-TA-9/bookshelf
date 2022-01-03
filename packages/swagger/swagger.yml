@@ -36,6 +36,22 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Book'
+  /books/{id}:
+    get:
+      operationId: BooksController_getBook
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
   /books/self:
     post:
       operationId: BooksController_createBookSelf

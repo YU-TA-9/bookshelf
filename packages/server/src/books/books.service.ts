@@ -1,5 +1,5 @@
 import { HttpService } from '@nestjs/axios';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { map, Observable } from 'rxjs';
 import { Book } from '../books/book.entity';
@@ -19,6 +19,21 @@ export class BooksService {
     return await this.booksRepository.find();
   }
 
+  async getBook(id: number): Promise<Book> {
+    const book = await this.booksRepository.findOne(id);
+    if (!book) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: `Not found with ${id}`,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+
+    return book;
+  }
+
   async createBookSelf(createBookSelfDto: CreateBookSelfDto): Promise<Book> {
     const book = new Book();
     const { name, author, publisher, status, category, image_path } =
@@ -35,12 +50,26 @@ export class BooksService {
   createBook(createBookDto: CreateBookDto): Observable<Promise<Book>> {
     return this.httpService
       .get(
-        `https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&isbn=${createBookDto.isbn}&applicationId=${process.env.RAKUTEN_APP_ID}`,
+        `https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&outOfStockFlag=1&isbn=${createBookDto.isbn}&applicationId=${process.env.RAKUTEN_APP_ID}`,
       )
       .pipe(
         map((response) => {
-          const book = new Book();
+          console.info('Rakuten API search result:', response);
+          const count = response.data.count;
+
+          if (!count) {
+            throw new HttpException(
+              {
+                status: HttpStatus.NOT_FOUND,
+                error: `Not found with ${createBookDto.isbn}`,
+              },
+              HttpStatus.NOT_FOUND,
+            );
+          }
+
           const data = response.data.Items[0].Item;
+
+          const book = new Book();
           // TODO: 重複排除用にISBNのカラムも作る
           book.name = data.title;
           book.author = data.author;

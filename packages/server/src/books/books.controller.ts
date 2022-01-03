@@ -1,4 +1,12 @@
-import { Body, Controller, Get, HttpCode, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { BooksService } from '../books/books.service';
@@ -11,10 +19,17 @@ export class BooksController {
   constructor(private readonly booksService: BooksService) {}
 
   @Get()
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: Book, isArray: true })
   getBookList(): Promise<Book[]> {
     return this.booksService.getBookList();
+  }
+
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({ type: Book })
+  getBook(@Param('id') id: number): Promise<Book> {
+    return this.booksService.getBook(id);
   }
 
   @Post('/self')
