@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 type Props = {
   label: string;
-  onClick: () => void;
+  onClick: (...args: any[]) => void;
 };
 
 const button = css`

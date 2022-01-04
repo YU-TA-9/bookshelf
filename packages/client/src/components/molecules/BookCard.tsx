@@ -7,7 +7,7 @@ import * as sampleImage from '../../assets/150x200.png';
 
 type Props = {
   title: string;
-  onClick: () => void;
+  onClick: (id: number) => void;
 };
 
 const card = css`
@@ -37,7 +37,6 @@ const titleText = css`
 `;
 
 export const BookCard = ({ title, onClick }: Props) => {
-  console.log(sampleImage);
   return (
     <div css={card}>
       <div css={imageWrap}>
