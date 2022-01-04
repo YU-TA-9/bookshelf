@@ -22,7 +22,7 @@ export const BookDetail = (props) => {
       const { data } = await api.booksControllerGetBook(Number(id));
       setBook(data);
     })();
-  });
+  }, []);
 
   return (
     <MainTemplate>
