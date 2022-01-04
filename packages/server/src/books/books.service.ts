@@ -76,7 +76,7 @@ export class BooksService {
           book.publisher = data.publisherName;
           book.status = 1; // TODO: Entityでdefault値を設定する
           book.category = 0; // TODO: カテゴリー未設定時はNullとななるようNull許容にする
-          book.image_path = data.mediumImageUrl;
+          book.image_path = data.largeImageUrl;
           return this.booksRepository.save(book);
         }),
       );
