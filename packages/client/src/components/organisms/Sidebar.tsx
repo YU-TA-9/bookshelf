@@ -31,7 +31,7 @@ export const Sidebar = () => {
     <div css={sidebar}>
       <ul css={itemList}>
         <li css={item}>
-          <Link text="登録" href="/test"></Link>
+          <Link text="登録" href="/register"></Link>
         </li>
         <li css={item}>
           <Link text="ログイン" href="/login"></Link>
