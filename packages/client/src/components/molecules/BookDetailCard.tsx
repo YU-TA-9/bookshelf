@@ -1,5 +1,8 @@
+import dayjs from 'dayjs';
 import { css } from '@emotion/react';
 import { Book } from '../../api/generated';
+import { StatusLabel } from '../atoms/StatusLabel';
+import { dateText } from '../../utils/dateUtil';
 
 type Props = {
   book: Book;
@@ -18,7 +21,8 @@ export const BookDetailCard = ({ book }: Props) => {
       <li>{book?.name}</li>
       <li>{book?.author}</li>
       <li>{book?.publisher}</li>
-      <li>{book?.status}</li>
+      <li>{StatusLabel(book?.status)}</li>
+      <li>{dateText(book?.createdAt)}</li>
     </ul>
   );
 };
