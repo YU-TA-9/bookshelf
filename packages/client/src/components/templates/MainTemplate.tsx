@@ -1,9 +1,11 @@
 import { css } from '@emotion/react';
+import { Title } from '../atoms/Title';
 import { Header } from '../organisms/Header';
 import { Sidebar } from '../organisms/Sidebar';
 
 type Props = {
   children?: React.ReactNode;
+  title: string;
 };
 
 const background = css`
@@ -24,16 +26,35 @@ const background = css`
 // FIXME: 仮で置いている
 const content = css`
   position: absolute;
+  width: calc(100% - 302px);
   top: 124px;
   left: 302px;
 `;
 
-export const MainTemplate = ({ children }: Props) => {
+const titleArea = css`
+  border-radius: 10px;
+  margin: 16px;
+  padding: 16px;
+`;
+
+const mainArea = css`
+  background: #fffffe;
+  border-radius: 10px;
+  margin: 16px;
+  padding: 16px;
+`;
+
+export const MainTemplate = ({ children, title }: Props) => {
   return (
     <div css={background}>
       <Header />
       <Sidebar />
-      <div css={content}>{children}</div>
+      <div css={content}>
+        <div css={titleArea}>
+          <Title text={title} />
+        </div>
+        <div css={mainArea}>{children}</div>
+      </div>
     </div>
   );
 };

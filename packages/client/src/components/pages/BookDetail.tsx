@@ -25,7 +25,7 @@ export const BookDetail = (props) => {
   }, []);
 
   return (
-    <MainTemplate>
+    <MainTemplate title="書籍詳細">
       <div css={bookDetailWrap}>
         <BookDetailCard book={book} />
       </div>

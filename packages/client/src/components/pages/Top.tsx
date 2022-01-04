@@ -16,9 +16,10 @@ export const Top = () => {
   }, []);
 
   return (
-    <MainTemplate>
-      <Title text="TEST TOP" />
-      <BookList books={bookData} />
+    <MainTemplate title="TOP">
+      <div>
+        <BookList books={bookData} />
+      </div>
     </MainTemplate>
   );
 };

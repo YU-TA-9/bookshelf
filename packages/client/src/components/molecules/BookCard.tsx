@@ -7,6 +7,7 @@ import * as sampleImage from '../../assets/150x200.png';
 
 type Props = {
   title: string;
+  imageSrc: string;
   onClick: (id: number) => void;
 };
 
@@ -36,11 +37,11 @@ const titleText = css`
   white-space: nowrap;
 `;
 
-export const BookCard = ({ title, onClick }: Props) => {
+export const BookCard = ({ title, imageSrc, onClick }: Props) => {
   return (
     <div css={card}>
       <div css={imageWrap}>
-        <img alt="" src={sampleImage}></img>
+        <img alt="" src={imageSrc || sampleImage}></img>
       </div>
       <p css={titleText}>{title}</p>
       <div>

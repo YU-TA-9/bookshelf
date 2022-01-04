@@ -29,6 +29,7 @@ export const BookList = ({ books }: Props) => {
         <div css={item} key={book.id}>
           <BookCard
             title={book.name}
+            imageSrc={book.image_path}
             onClick={() => {
               handleDetailButton(book.id);
             }}
