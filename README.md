@@ -14,14 +14,6 @@
 
 - If you use a GUI tool to manage the git (as SourceTree), you must setup `~/.huskyrc` that defines a path to node.js (or node admin tools) to execute the commands through husky.
 
-  - For example (for zsh)
-  - ```
-    source ~/.zprofile export
-
-    # path to node.js
-    ...
-    ```
-
 ## Client
 
 - React v17.0.2
