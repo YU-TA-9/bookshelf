@@ -35,10 +35,18 @@ $ yarn cl dev
 - TypeORM
 - Sqlite (may use MysQL in the future...)
 
+### Setup
+
+- You must setup `/packages/server/.env`
+  - ```
+    RAKUTEN_APP_ID=<Your API ID>
+    ```
+
 ### Getting started
 
 ```shell
 # in local
+$ yarn sr migration:run
 $ yarn sr start:dev
 ```
 
