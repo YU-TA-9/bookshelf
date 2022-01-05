@@ -81,4 +81,17 @@ export class BooksService {
         }),
       );
   }
+
+  async deleteBook(id: number): Promise<void> {
+    const result = await this.booksRepository.delete(id);
+    if (result.affected === 0) {
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: `Not found with ${id}`,
+        },
+        HttpStatus.NOT_FOUND,
+      );
+    }
+  }
 }

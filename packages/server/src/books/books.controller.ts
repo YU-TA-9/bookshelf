@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   HttpStatus,
@@ -47,5 +48,11 @@ export class BooksController {
   @ApiCreatedResponse({ type: Book })
   createBook(@Body() createBookDto: CreateBookDto): Observable<Promise<Book>> {
     return this.booksService.createBook(createBookDto);
+  }
+
+  @Delete('/:id')
+  @HttpCode(HttpStatus.OK)
+  deleteBook(@Param('id') id: number) {
+    return this.booksService.deleteBook(id);
   }
 }
