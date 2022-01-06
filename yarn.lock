@@ -1665,6 +1665,13 @@
   resolved "https://registry.npmjs.org/@types/cookiejar/-/cookiejar-2.1.2.tgz"
   integrity sha512-t73xJJrvdTjXrn4jLS9VSGRbz0nUY3cl2DMGDU48lKl+HR9dbbjW2A9r3g40VA++mQpy6uuHg33gy7du2BKpog==
 
+"@types/dompurify@^2.3.2":
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/@types/dompurify/-/dompurify-2.3.2.tgz#85e8fd9ab1d7d0d3078968682e458094d41a8ad6"
+  integrity sha512-iht/O0jie/hDur39Z1NzjfOT/O9Kn2aWY99aqOn7lwsjSttEoMyGWvZIuAzZy0cNvAZdjmqySp7Z4d3GfBEGQw==
+  dependencies:
+    "@types/trusted-types" "*"
+
 "@types/eslint-scope@^3.7.0":
   version "3.7.2"
   resolved "https://registry.npmjs.org/@types/eslint-scope/-/eslint-scope-3.7.2.tgz"
@@ -1769,6 +1776,11 @@
   version "0.0.29"
   resolved "https://registry.npmjs.org/@types/json5/-/json5-0.0.29.tgz"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+
+"@types/marked@^4.0.1":
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@types/marked/-/marked-4.0.1.tgz#d588a7bbc4d6551c5e75249bc106ffda96ae33c5"
+  integrity sha512-ZigEmCWdNUU7IjZEuQ/iaimYdDHWHfTe3kg8ORfKjyGYd9RWumPoOJRQXB0bO+XLkNwzCthW3wUIQtANaEZ1ag==
 
 "@types/mime@^1":
   version "1.3.2"
@@ -1886,6 +1898,11 @@
   integrity sha512-uci4Esokrw9qGb9bvhhSVEjd6rkny/dk5PK/Qz4yxKiyppEI+dOPlNrZBahE3i+PoKFYyDxChVXZ/ysS/nrm1Q==
   dependencies:
     "@types/superagent" "*"
+
+"@types/trusted-types@*":
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/trusted-types/-/trusted-types-2.0.2.tgz#fc25ad9943bcac11cceb8168db4f275e0e72e756"
+  integrity sha512-F5DIZ36YVLE+PN+Zwws4kJogq47hNgX3Nx6WyDJ3kcplxyke3XIzB8uK5n/Lpm1HBsbGzd6nmGehL8cPekP+Tg==
 
 "@types/ws@^8.2.2":
   version "8.2.2"
@@ -3495,6 +3512,11 @@ domhandler@^4.0.0, domhandler@^4.2.0, domhandler@^4.3.0:
   integrity sha512-fC0aXNQXqKSFTr2wDNZDhsEYjCiYsDWl3D01kwt25hm1YIPyDGHvvi3rw+PLqHAl/m71MaiF7d5zvBr0p5UB2g==
   dependencies:
     domelementtype "^2.2.0"
+
+dompurify@^2.3.4:
+  version "2.3.4"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-2.3.4.tgz#1cf5cf0105ccb4debdf6db162525bd41e6ddacc6"
+  integrity sha512-6BVcgOAVFXjI0JTjEvZy901Rghm+7fDQOrNIcxB4+gdhj6Kwp6T9VBhBY/AbagKHJocRkDYGd6wvI+p4/10xtQ==
 
 domutils@^2.5.2, domutils@^2.8.0:
   version "2.8.0"
@@ -5783,6 +5805,11 @@ makeerror@1.0.12:
   integrity sha512-JmqCvUhmt43madlpFzG4BQzG2Z3m6tvQDNKdClZnO3VbIudJYmxsT0FNJMeiB2+JTSlTQTSbU8QdesVmwJcmLg==
   dependencies:
     tmpl "1.0.5"
+
+marked@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-4.0.8.tgz#ef127626ac65786460f9420d57cc8d5ffdcacbed"
+  integrity sha512-dkpJMIlJpc833hbjjg8jraw1t51e/eKDoG8TFOgc5O0Z77zaYKigYekTDop5AplRoKFGIaoazhYEhGkMtU3IeA==
 
 media-typer@0.3.0:
   version "0.3.0"
