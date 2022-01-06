@@ -3,13 +3,14 @@ import { css } from '@emotion/react';
 type Props = {
   label: string;
   onClick: (...args: any[]) => void;
+  width: number;
 };
 
-const button = css`
+const button = (width: number) => css`
   background: #3da9fc;
   border: 0;
   border-radius: 10px;
-  width: 96px;
+  width: ${width}px;
   padding: 4px 12px;
   font-size: 16px;
   text-align: center;
@@ -21,9 +22,9 @@ const button = css`
   }
 `;
 
-export const Button = ({ label, onClick }: Props) => {
+export const Button = ({ label, onClick, width }: Props) => {
   return (
-    <button css={button} onClick={onClick}>
+    <button css={button(width)} onClick={onClick}>
       {label}
     </button>
   );

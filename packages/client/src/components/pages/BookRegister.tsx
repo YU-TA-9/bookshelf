@@ -53,10 +53,11 @@ export const BookRegister = () => {
     <MainTemplate title="書籍登録">
       <div>
         <TextForm value={isbn} onChange={handleChange} />
-        <Button label="ISBNコードで登録" onClick={handleRegister} />
+        <Button label="ISBNコードで登録" onClick={handleRegister} width={120} />
         <Button
           label="バーコードをスキャンして登録"
           onClick={handleScannerModalButton}
+          width={200}
         />
         {open && (
           <ModalPortal>

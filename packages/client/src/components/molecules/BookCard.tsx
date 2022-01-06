@@ -45,7 +45,7 @@ export const BookCard = ({ title, imageSrc, onClick }: Props) => {
       </div>
       <p css={titleText}>{title}</p>
       <div>
-        <Button label="詳細" onClick={onClick}></Button>
+        <Button label="詳細" onClick={onClick} width={96}></Button>
       </div>
     </div>
   );
