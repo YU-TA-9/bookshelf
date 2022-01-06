@@ -1,23 +1,52 @@
 import * as React from 'react';
 import { api } from '../../api/apiFactory';
 import { Button } from '../atoms/Button';
+import { Modal } from '../atoms/Modal';
+import { ModalPortal } from '../../logics/ModalPortal';
+import { Scanner } from '../atoms/Scanner';
 import { TextForm } from '../atoms/TextForm';
 import { MainTemplate } from '../templates/MainTemplate';
 
 export const BookRegister = () => {
   const [isbn, setIsbn] = React.useState<string>('');
+  const [code, setCode] = React.useState<string>('');
+
+  const [open, setOpen] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    (async () => {
+      if (!code) {
+        return;
+      }
+
+      const response = await api.booksControllerCreateBook({ isbn: code });
+      if (response.status !== 201) {
+        alert('Failed!!');
+      } else {
+        alert(`Success!\n${JSON.stringify(response.data)}`);
+      }
+    })();
+  }, [code]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsbn(e.target.value);
   };
 
   const handleRegister = async () => {
-    const response = await api.booksControllerCreateBook({ isbn: isbn });
-    if (response.status !== 201) {
-      alert('Failed!!');
-    } else {
-      alert('Success!');
+    try {
+      const response = await api.booksControllerCreateBook({ isbn: isbn });
+      if (response.status !== 201) {
+        alert('Failed!!');
+      } else {
+        alert(`Success!\n${JSON.stringify(response.data)}`);
+      }
+    } catch (e) {
+      console.error(e);
     }
+  };
+
+  const handleScannerModalButton = () => {
+    setOpen(true);
   };
 
   return (
@@ -25,6 +54,17 @@ export const BookRegister = () => {
       <div>
         <TextForm value={isbn} onChange={handleChange} />
         <Button label="ISBNコードで登録" onClick={handleRegister} />
+        <Button
+          label="バーコードをスキャンして登録"
+          onClick={handleScannerModalButton}
+        />
+        {open && (
+          <ModalPortal>
+            <Modal onClose={() => setOpen(false)}>
+              <Scanner setValue={setCode} />
+            </Modal>
+          </ModalPortal>
+        )}
       </div>
     </MainTemplate>
   );
