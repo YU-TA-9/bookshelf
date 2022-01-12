@@ -3,6 +3,7 @@ packages/client/src/api/generated
 
 # db
 **/db/
+**/middlewares/data
 
 # ↓ ref: https://github.com/github/gitignore/blob/main/Node.gitignore
 
