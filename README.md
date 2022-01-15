@@ -50,6 +50,15 @@ $ yarn sr migration:run
 $ yarn sr start:dev
 ```
 
+### Command
+
+#### Migration
+
+```shell
+$ yarn sr migration:generate -n <Name of the migration file>
+$ yarn sr migration:run
+```
+
 ### Document
 
 I use swagger for managing specifications of api.
