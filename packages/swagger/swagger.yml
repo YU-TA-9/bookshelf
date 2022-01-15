@@ -80,6 +80,24 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Book'
+  /books/memo/{id}:
+    patch:
+      operationId: BooksController_patchBookMemo
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBookMemoDto'
+      responses:
+        '200':
+          description: ''
 info:
   title: Reading Management API
   description: API Docs
@@ -96,6 +114,9 @@ components:
       properties:
         id:
           type: number
+        isbn:
+          type: string
+          description: ISBNコード
         name:
           type: string
           description: 書籍名
@@ -115,10 +136,13 @@ components:
             - 4
         category:
           type: number
-          description: カテゴリー
+          description: カテゴリー(0 = "未設定")
         image_path:
           type: string
           description: 画像パス
+        memo:
+          type: string
+          description: メモ
         createdAt:
           format: date-time
           type: string
@@ -129,12 +153,14 @@ components:
           description: 更新日
       required:
         - id
+        - isbn
         - name
         - author
         - publisher
         - status
         - category
         - image_path
+        - memo
         - createdAt
         - updatedAt
     CreateBookSelfDto:
@@ -149,27 +175,10 @@ components:
         publisher:
           type: string
           description: 出版社名
-        status:
-          type: number
-          description: '読書状態 1: 未読 2: 読書中 3: 読了 4: 中断'
-          enum:
-            - 1
-            - 2
-            - 3
-            - 4
-        category:
-          type: number
-          description: カテゴリー
-        image_path:
-          type: string
-          description: 画像パス
       required:
         - name
         - author
         - publisher
-        - status
-        - category
-        - image_path
     CreateBookDto:
       type: object
       properties:
@@ -178,3 +187,11 @@ components:
           description: ISBNコード
       required:
         - isbn
+    PatchBookMemoDto:
+      type: object
+      properties:
+        memo:
+          type: string
+          description: メモ
+      required:
+        - memo

@@ -6,7 +6,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IBook } from './book.interface';
+
+export const CATEGORY_UNSET = 0;
 
 export enum Status {
   /** 未読 */
@@ -23,11 +24,15 @@ export const statusValues = Object.keys(Status)
   .filter((k) => typeof Status[k] === 'number')
   .map((k) => Status[k]);
 
-@Entity()
-export class Book implements IBook {
+@Entity('books')
+export class Book {
   @PrimaryGeneratedColumn()
   @ApiProperty()
   id: number;
+
+  @Column({ unique: true, nullable: true })
+  @ApiProperty({ description: 'ISBNコード' })
+  isbn: string;
 
   @Column()
   @ApiProperty({ description: '書籍名' })
@@ -41,7 +46,7 @@ export class Book implements IBook {
   @ApiProperty({ description: '出版社名' })
   publisher: string;
 
-  @Column({ type: 'simple-enum', enum: Status })
+  @Column({ type: 'enum', enum: Status })
   @ApiProperty({
     description: '読書状態 1: 未読 2: 読書中 3: 読了 4: 中断',
     enum: statusValues,
@@ -49,12 +54,16 @@ export class Book implements IBook {
   status: Status;
 
   @Column()
-  @ApiProperty({ description: 'カテゴリー' })
+  @ApiProperty({ description: 'カテゴリー(0 = "未設定")' })
   category: number;
 
-  @Column()
+  @Column({ type: 'text', nullable: true })
   @ApiProperty({ description: '画像パス' })
   image_path: string;
+
+  @Column({ type: 'text', nullable: true })
+  @ApiProperty({ description: 'メモ' })
+  memo: string;
 
   @CreateDateColumn()
   @ApiProperty({ description: '追加日' })

@@ -2,10 +2,11 @@ import { HttpService } from '@nestjs/axios';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { map, Observable } from 'rxjs';
-import { Book } from '../books/book.entity';
+import { Book, CATEGORY_UNSET, Status } from '../books/book.entity';
 import { Repository } from 'typeorm';
 import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
+import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
 
 @Injectable()
 export class BooksService {
@@ -36,14 +37,13 @@ export class BooksService {
 
   async createBookSelf(createBookSelfDto: CreateBookSelfDto): Promise<Book> {
     const book = new Book();
-    const { name, author, publisher, status, category, image_path } =
-      createBookSelfDto;
+    const { name, author, publisher } = createBookSelfDto;
     book.name = name;
     book.author = author;
     book.publisher = publisher;
-    book.status = status;
-    book.category = category;
-    book.image_path = image_path;
+    // set default
+    book.status = Status.WAITING;
+    book.category = CATEGORY_UNSET;
     return await this.booksRepository.save(book);
   }
 
@@ -54,6 +54,7 @@ export class BooksService {
       )
       .pipe(
         map((response) => {
+          // TODO: 楽天APIのインターフェースを定義したい
           console.info('Rakuten API search result:', response);
           const count = response.data.count;
 
@@ -70,12 +71,13 @@ export class BooksService {
           const data = response.data.Items[0].Item;
 
           const book = new Book();
-          // TODO: 重複排除用にISBNのカラムも作る
+          book.isbn = data.isbn;
           book.name = data.title;
           book.author = data.author;
           book.publisher = data.publisherName;
-          book.status = 1; // TODO: Entityでdefault値を設定する
-          book.category = 0; // TODO: カテゴリー未設定時はNullとななるようNull許容にする
+          // set default
+          book.status = Status.WAITING;
+          book.category = CATEGORY_UNSET;
           book.image_path = data.largeImageUrl;
           return this.booksRepository.save(book);
         }),
@@ -93,5 +95,15 @@ export class BooksService {
         HttpStatus.NOT_FOUND,
       );
     }
+  }
+
+  async updateBookMemo(
+    id: number,
+    patchBookMemoDto: PatchBookMemoDto,
+  ): Promise<Book> {
+    // TODO: findOneとどちらを使うか統一する
+    const book = await this.booksRepository.findOneOrFail(id);
+    book.memo = patchBookMemoDto.memo;
+    return await this.booksRepository.save(book);
   }
 }

@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
@@ -14,6 +15,7 @@ import { BooksService } from '../books/books.service';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
+import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
 
 @Controller('books')
 export class BooksController {
@@ -54,5 +56,14 @@ export class BooksController {
   @HttpCode(HttpStatus.OK)
   deleteBook(@Param('id') id: number) {
     return this.booksService.deleteBook(id);
+  }
+
+  @Patch('/memo/:id')
+  @HttpCode(HttpStatus.OK)
+  patchBookMemo(
+    @Param('id') id: number,
+    @Body() patchBookMemoDto: PatchBookMemoDto,
+  ) {
+    return this.booksService.updateBookMemo(id, patchBookMemoDto);
   }
 }
