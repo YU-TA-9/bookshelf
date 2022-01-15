@@ -18,6 +18,17 @@ export const globalStyle = css`
     height: 100%;
   }
 
+  body {
+    background-attachment: scroll;
+    background-image: none;
+    background-color: #e4e4e4;
+    background-image: none;
+    background-origin: padding-box;
+    background-position-x: 0%;
+    background-position-y: 0%;
+    background-size: auto;
+  }
+
   h1 {
     font-size: ${fontSize.large};
   }

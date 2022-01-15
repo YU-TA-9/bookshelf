@@ -1,10 +1,9 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
-import { ModalPortal } from './ModalPortal';
 
 type Props = {
-  children: JSX.Element;
-  onClose: any;
+  children: React.ReactNode;
+  onClose: () => void;
 };
 
 const modalWrap = css`

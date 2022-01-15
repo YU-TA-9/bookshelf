@@ -7,6 +7,7 @@ import { TextareaForm } from '../atoms/TextareaForm';
 type Props = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  showHTML: boolean;
 };
 
 const markdownAndHtmlArea = css`
@@ -15,9 +16,7 @@ const markdownAndHtmlArea = css`
   height: 400px;
 `;
 
-const buttonWrap = css`
-  margin-bottom: 8px;
-`;
+const textareaWrap = css``;
 
 const textFormWrap = (showHTML: boolean) => css`
   height: 100%;
@@ -29,22 +28,16 @@ const htmlTextAreaWrap = (showHTML: boolean) => css`
   display: ${showHTML ? 'block' : 'none'};
 `;
 
-export const MarkdownAndHTMLArea = ({ value, onChange }: Props) => {
-  const [showHTML, setShowHTML] = React.useState<boolean>(false);
+export const MarkdownAndHTMLArea = ({ value, onChange, showHTML }: Props) => {
   return (
     <div css={markdownAndHtmlArea}>
-      <div css={buttonWrap}>
-        <Button
-          label={showHTML ? 'to Markdown' : 'to HTML'}
-          onClick={() => setShowHTML(!showHTML)}
-          width={180}
-        />
-      </div>
-      <div css={textFormWrap(showHTML)}>
-        <TextareaForm value={value} onChange={onChange} />
-      </div>
-      <div css={htmlTextAreaWrap(showHTML)}>
-        <HTMLTextarea value={value} />
+      <div css={textareaWrap}>
+        <div css={textFormWrap(showHTML)}>
+          <TextareaForm value={value} onChange={onChange} />
+        </div>
+        <div css={htmlTextAreaWrap(showHTML)}>
+          <HTMLTextarea value={value} />
+        </div>
       </div>
     </div>
   );

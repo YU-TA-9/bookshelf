@@ -6,10 +6,13 @@ import { fontSize } from '../../styles/fontSize';
 import * as React from 'react';
 import { convertMarkdownToHTML } from '../../utils/sanitize';
 import { TextareaForm } from '../atoms/TextareaForm';
-import { MarkdownAndHTMLArea } from './MarkdownAndHTMLArea';
+import { MarkdownAndHTMLArea } from '../molecules/MarkdownAndHTMLArea';
+import { Button } from '../atoms/Button';
 
 type Props = {
   book: Book;
+  markdown: string;
+  onMarkdownChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 const table = css`
@@ -28,12 +31,12 @@ const bookTitle = css`
   font-weight: 700;
 `;
 
-export const BookDetailCard = ({ book }: Props) => {
-  const [markdown, setMarkDown] = React.useState<string>('');
+const buttonWrap = css`
+  margin-bottom: 8px;
+`;
 
-  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMarkDown(e.target.value);
-  };
+export const BookDetailCard = ({ book, markdown, onMarkdownChange }: Props) => {
+  const [showHTML, setShowHTML] = React.useState<boolean>(false);
 
   return (
     <>
@@ -48,7 +51,20 @@ export const BookDetailCard = ({ book }: Props) => {
         <li>{dateText(book?.createdAt)}</li>
       </ul>
       <div>
-        <MarkdownAndHTMLArea value={markdown} onChange={handleChange} />
+        <div css={buttonWrap}>
+          <Button
+            label={showHTML ? 'to Markdown' : 'to HTML'}
+            onClick={() => setShowHTML(!showHTML)}
+            width={180}
+          />
+        </div>
+      </div>
+      <div>
+        <MarkdownAndHTMLArea
+          value={markdown}
+          onChange={onMarkdownChange}
+          showHTML={showHTML}
+        />
       </div>
     </>
   );

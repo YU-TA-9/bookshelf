@@ -9,26 +9,28 @@ type Props = {
 };
 
 const background = css`
+  display: flex;
+  flex-wrap: wrap;
   z-index: 1;
-  position: relative;
   width: 100%;
   height: 100%;
   background: #e4e4e4;
-
-  // FIXME: 仮で置いている
-  &:before {
-    content: '';
-    display: block;
-    padding-top: 100%;
-  }
 `;
 
-// FIXME: 仮で置いている
-const content = css`
-  position: absolute;
-  width: calc(100% - 302px);
-  top: 124px;
-  left: 302px;
+const headerWrap = (height: number) => css`
+  width: 100%;
+  height: ${height}px;
+`;
+
+const sidebarWrap = (width: number, headerHeight: number) => css`
+  height: calc(100vh - ${headerHeight}px);
+  width: ${width}px;
+`;
+
+const content = (sidebarWidth: number, headerHeight: number) => css`
+  width: calc(100% - ${sidebarWidth}px);
+  height: calc(100vh - ${headerHeight}px);
+  overflow: scroll;
 `;
 
 const titleArea = css`
@@ -44,12 +46,19 @@ const mainArea = css`
   padding: 16px;
 `;
 
+const headerHeight = 124;
+const sidebarWidth = 256;
+
 export const MainTemplate = ({ children, title }: Props) => {
   return (
     <div css={background}>
-      <Header />
-      <Sidebar />
-      <div css={content}>
+      <div css={headerWrap(headerHeight)}>
+        <Header />
+      </div>
+      <div css={sidebarWrap(sidebarWidth, headerHeight)}>
+        <Sidebar />
+      </div>
+      <div css={content(sidebarWidth, headerHeight)}>
         <div css={titleArea}>
           <Title text={title} />
         </div>

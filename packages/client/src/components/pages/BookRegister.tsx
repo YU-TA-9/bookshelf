@@ -19,11 +19,15 @@ export const BookRegister = () => {
         return;
       }
 
-      const response = await api.booksControllerCreateBook({ isbn: code });
-      if (response.status !== 201) {
+      try {
+        const response = await api.booksControllerCreateBook({ isbn: code });
+        if (response.status !== 201) {
+          alert('Failed!!');
+        } else {
+          alert(`Success!\n${JSON.stringify(response.data)}`);
+        }
+      } catch (e) {
         alert('Failed!!');
-      } else {
-        alert(`Success!\n${JSON.stringify(response.data)}`);
       }
     })();
   }, [code]);
