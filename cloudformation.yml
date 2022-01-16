@@ -1,0 +1,237 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Infrastructure of Reading Management WEB
+
+Mappings:
+  SubnetConfig:
+    VPC:
+      CIDR: "10.0.0.0/16"
+    API:
+      CIDR: "10.0.10.0/24"
+    DB:
+      CIDR-A: "10.0.0.0/24"
+      CIDR-C: "10.0.1.0/24"
+  DBConfig:
+    version: 8.0.23
+
+Parameters:
+  PjName:
+    Type: String
+  DBMasterUserName:
+    Type: String
+  DBPassword:
+    Type: String
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VPCCird
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${PjName}-vpc
+
+  APISubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: !FindInMap ["SubnetConfig", "API", "CIDR"]
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${PjName}-api-subnet
+
+  DBSubnetA:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: !FindInMap ["SubnetConfig", "DB", "CIDR-A"]
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${PjName}-db-subnet-a
+
+  DBSubnetC:
+    Type: AWS::EC2::Subnet
+    Properties:
+      AvailabilityZone: ap-northeast-1c
+      CidrBlock: !FindInMap ["SubnetConfig", "DB", "CIDR-C"]
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${PjName}-db-subnet-c
+
+  DB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: !Sub ${PjName}-rds
+      Engine: MySQL
+      EngineVersion: !FindInMap ["DBConfig", "version"]
+      DBInstanceClass: db.t3.micro
+      AllocatedStorage: 1
+      StorageType: gp2
+      DBName: !Sub ${PjName}-db
+      MasterUsername: !Ref DBMasterUserName
+      MasterUserPassword: !Ref DBPassword
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      PubliclyAccessible: false
+      MultiAZ: false
+      AvailabilityZone: ap-northeast-1a # MultiAZ: true 時は削除
+      # PreferredBackupWindow: "18:00-18:30"
+      # PreferredMaintenanceWindow: "sat:19:00-sat:19:30"
+      AutoMinorVersionUpgrade: false
+      DBParameterGroupName: !Ref DBParameterGroup  
+      VPCSecurityGroups:
+        - !Ref RDSSecurityGroup
+      CopyTagsToSnapshot: true
+      BackupRetentionPeriod: 7
+      Tags: 
+        - Key: Name
+          Value: !Sub ${PjName}-rds-instance
+    DeletionPolicy: "Delete"
+  
+  RDSSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      VpcId: !Ref VPC
+      GroupName: !Sub ${PjName}-rds-sg
+      GroupDescription: !Sub "${PjName} rds security group"
+      Tags:
+        - Key: Name
+          Value: !Sub ${PjName}-${DBInstanceName}-sg
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 3306
+          ToPort: 3306
+          CidrIp: !FindInMap ["SubnetConfig", "API", "CIDR"]
+  
+  DBSubnetGroup: 
+    Type: AWS::RDS::DBSubnetGroup
+    Properties: 
+      DBSubnetGroupName: !Sub ${PjName}-rds-subnet
+      DBSubnetGroupDescription: !Sub ${PjName} subnet group
+      SubnetIds: 
+        - !Ref DBSubnetA
+        - !Ref DBSubnetC
+
+  DBParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Family: !Sub 
+        - MySQL${MySQLMajorVersion}
+        - { MySQLMajorVersion: !FindInMap ["DBConfig", "version"] }
+      Description: !Sub ${PjName} ${DBInstanceName} parameter group
+
+  EcsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/${PjName}
+
+  EcsTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+                - events.amazonaws.com
+              Actions:
+                - sts:AssumeRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole
+        RoleName: !Sub ${PjName}-task-execution-role
+  
+  EcsTaskExecutionRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${PjName}-task-execution-role-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: !Ref AllowEcsPolicy
+            Resource: "*"
+        Roles:
+          - Ref: EcsExecutionRole
+  
+  EcsTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+                - events.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        ManagementPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole
+        RoleName: !Sub ${PjName}-task-role
+
+  EcsTaskRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${PjName}-task-role-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: !Ref AllowEcsPolicy
+            Resource: "*"
+        Roles:
+          - Ref: EcsTaskRole
+
+  Repository:
+    Type: AWS::ECR::Repository
+    Properties:
+      RepositoryName: !Sub ${PjName}-api-repository
+
+  Cluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: !Sub ${PjName}-api-cluster
+  
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Sub ${PjName}-api
+      RequiresCompatibilities:
+        - FARGATE
+      Cpu: 256
+      Memory: 512
+      NetworkMode: awsvpc
+      ExecutionRoleArn: !GetAtt EcsTaskExecutionRole.Arn
+      TaskRoleArn: !GetAtt EcsTaskRolw.Arn
+      ContainerDefinitions:
+        - Name: api
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}
+          PortMappings:
+            - ContainerPort: 80
+              Protocol: tcp
+          Environment:
+            - Name: TZ
+              Value: Asia/Tokyo
+          LogConfiguration:
+            LogDriver: awslogs
+            Options:
+              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref EcsLogGroup
+              awslogs-stream-prefix: api
+          Essential: true
+          Command:
+            - ["yarn", "start:prod"]
+          LinuxParameters:
+            - initProcessEnabled: true
+          # Secrets:
+            # - Name: 
+            #   ValueFrom: 
+            # - Name:
+            #   ValueFrom: 
+  TargetGroup:
+  
