@@ -1,4 +1,4 @@
-# Reading-Management-Web
+# [WIP]Reading-Management-Web
 
 読書管理 WEB アプリの monorepo
 
