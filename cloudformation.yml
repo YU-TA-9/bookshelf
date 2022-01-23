@@ -1,27 +1,35 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: Infrastructure of Reading Management WEB
 
-Mappings:
-  SubnetConfig:
-    VPC:
-      CIDR: "10.0.0.0/16"
-    API:
-      CIDR: "10.0.10.0/24"
-    DB:
-      CIDR-A: "10.0.0.0/24"
-      CIDR-C: "10.0.1.0/24"
-  DBConfig:
-    version: 8.0.23
-
 Parameters:
-  PjName:
+  ProjectName:
     Type: String
+  VPCCird:
+    Type: String
+    Default: 10.0.0.0/16
+  APICird:
+    Type: String
+  DBCidrA:
+    Type: String
+  DBCirdC:
+    Type: String
+  DBVersion:
+    Type: Number
+    Default: 8.0.23
   DBMasterUserName:
     Type: String
-  DBPassword:
+  DBMasterUserPassword:
     Type: String
+  Domain:
+    Type: String
+    AllowedPattern: (?!-)[a-zA-Z0-9-.]{1,63}(?<!-)
 
 Resources:
+
+  #----------
+  # 共通
+  #----------
+
   VPC:
     Type: AWS::EC2::VPC
     Properties:
@@ -29,17 +37,89 @@ Resources:
       EnableDnsSupport: true
       Tags:
         - Key: Name
-          Value: !Sub ${PjName}-vpc
-
-  APISubnet:
-    Type: AWS::EC2::Subnet
+          Value: !Sub ${ProjectName}-vpc
+  
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
     Properties:
-      AvailabilityZone: ap-northeast-1a
-      CidrBlock: !FindInMap ["SubnetConfig", "API", "CIDR"]
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-igw
+  
+  GatewayAttachment:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC
+      InternetGatewayId: !Ref InternetGateway
+
+  RouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub ${PjName}-api-subnet
+          Value: !Sub ${ProjectName}-route-table
+
+  InternetRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref RouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  HostedZone:
+    Type: AWS::Route53::HostedZone
+    Properties:
+      Name: !Ref Domain
+  
+  RecordSetGroup:
+    Type: AWS::Route53::RecordSetGroup
+    Properties:
+      HostedZoneId: !Ref HostZone
+      RecordSets:
+        - Name: !Ref Domain
+          Comment: DNS for cloudfront distribution with web asset
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt CloudFrontDistribution.DomainName
+            HostedZoneId: Z2FDTNDATAQYW2 # 固定値
+        - Name: !Sub api.${Domain}
+          Comment: DNS for api elb
+          Type: A
+          AliasTarget:
+            DNSName: !GetAtt APILoadBalancer.CanonicalHostedZoneID # ELBから
+            HostedZoneId: !GetAtt APILoadBalancer.DNSName # ELBから
+
+  WebCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub ${Domain}
+      DomainValidationOptions:
+        - DomainName: !Sub ${Domain}
+          HostedZoneId: !Ref HostedZone
+      ValidationMethod: DNS
+  
+  APICertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub api.${Domain}
+      DomainValidationOptions:
+        - DomainName: !Sub api.${Domain}
+          HostedZoneId: !Ref HostedZone
+      ValidationMethod: DNS
+
+  WebCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: !Sub api.${Domain}
+      DomainValidationOptions:
+        - DomainName: !Sub api.${Domain}
+          HostedZoneId: !Ref HostedZone
+      ValidationMethod: DNS
+
+  #----------
+  # DB
+  #----------
 
   DBSubnetA:
     Type: AWS::EC2::Subnet
@@ -49,7 +129,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub ${PjName}-db-subnet-a
+          Value: !Sub ${ProjectName}-db-subnet-a
 
   DBSubnetC:
     Type: AWS::EC2::Subnet
@@ -59,20 +139,20 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: !Sub ${PjName}-db-subnet-c
+          Value: !Sub ${ProjectName}-db-subnet-c
 
-  DB:
+  DBInstance:
     Type: AWS::RDS::DBInstance
     Properties:
-      DBInstanceIdentifier: !Sub ${PjName}-rds
+      DBInstanceIdentifier: !Sub ${ProjectName}-rds
       Engine: MySQL
-      EngineVersion: !FindInMap ["DBConfig", "version"]
+      EngineVersion: !Ref DBVersion
       DBInstanceClass: db.t3.micro
       AllocatedStorage: 1
       StorageType: gp2
-      DBName: !Sub ${PjName}-db
+      DBName: !Sub ${ProjectName}-db
       MasterUsername: !Ref DBMasterUserName
-      MasterUserPassword: !Ref DBPassword
+      MasterUserPassword: !Ref DBMasterUserPassword
       DBSubnetGroupName: !Ref DBSubnetGroup
       PubliclyAccessible: false
       MultiAZ: false
@@ -82,34 +162,34 @@ Resources:
       AutoMinorVersionUpgrade: false
       DBParameterGroupName: !Ref DBParameterGroup  
       VPCSecurityGroups:
-        - !Ref RDSSecurityGroup
+        - !Ref DBSecurityGroup
       CopyTagsToSnapshot: true
-      BackupRetentionPeriod: 7
+      BackupRetentionPeriod: 3
       Tags: 
         - Key: Name
-          Value: !Sub ${PjName}-rds-instance
+          Value: !Sub ${ProjectName}-rds-instance
     DeletionPolicy: "Delete"
   
-  RDSSecurityGroup:
+  DBSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
       VpcId: !Ref VPC
-      GroupName: !Sub ${PjName}-rds-sg
-      GroupDescription: !Sub "${PjName} rds security group"
+      GroupName: !Sub ${ProjectName}-rds-sg
+      GroupDescription: !Sub "${ProjectName} rds security group"
       Tags:
         - Key: Name
-          Value: !Sub ${PjName}-${DBInstanceName}-sg
+          Value: !Sub ${ProjectName}-rds-sg
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 3306
           ToPort: 3306
-          CidrIp: !FindInMap ["SubnetConfig", "API", "CIDR"]
+          CidrIp: !Ref APISubnet
   
   DBSubnetGroup: 
     Type: AWS::RDS::DBSubnetGroup
     Properties: 
-      DBSubnetGroupName: !Sub ${PjName}-rds-subnet
-      DBSubnetGroupDescription: !Sub ${PjName} subnet group
+      DBSubnetGroupName: !Sub ${ProjectName}-rds-subnet
+      DBSubnetGroupDescription: !Sub ${ProjectName} subnet group
       SubnetIds: 
         - !Ref DBSubnetA
         - !Ref DBSubnetC
@@ -117,100 +197,189 @@ Resources:
   DBParameterGroup:
     Type: AWS::RDS::DBParameterGroup
     Properties:
-      Family: !Sub 
-        - MySQL${MySQLMajorVersion}
-        - { MySQLMajorVersion: !FindInMap ["DBConfig", "version"] }
-      Description: !Sub ${PjName} ${DBInstanceName} parameter group
+      Family: mysql8.0
+      Description: !Sub ${ProjectName} rds parameter group
+      Parameters:
+        character_set_database: utf8mb4
+        character_set_client: utf8mb4
+        character_set_connection: utf8mb4
+        character_set_results: utf8mb4
+        character_set_server: utf8mb4
 
-  EcsLogGroup:
-    Type: AWS::Logs::LogGroup
-    Properties:
-      LogGroupName: !Sub /ecs/${PjName}
+  #----------
+  # API
+  #----------
 
-  EcsTaskExecutionRole:
-    Type: AWS::IAM::Role
+  APISubnet:
+    Type: AWS::EC2::Subnet
     Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ecs-tasks.amazonaws.com
-                - events.amazonaws.com
-              Actions:
-                - sts:AssumeRole
-        ManagedPolicyArns:
-          - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole
-        RoleName: !Sub ${PjName}-task-execution-role
+      AvailabilityZone: ap-northeast-1a
+      CidrBlock: !Ref APICidr ##
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-api-subnet
+
+  APIElbSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for the api elb
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-alb-sg
+      GroupName: !Sub ${ProjectName}-alb-sg-group
+      VpcId: !Ref VPC
+
+  APIElbSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: !Ref APIElbSecurityGroup
+      IpProtocol: -1
+      SourceSecurityGroupId: !Ref APIElbSecurityGroup
+
+  APIEcsSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for the api ecs service
+      Tags:
+        - Key: Name
+          Value: !Sub ${ProjectName}-ecs-service-sg
+      GroupName: !Sub ${ProjectName}-ecs-service-sg-group
+      VpcId: !Ref VPC
   
-  EcsTaskExecutionRolePolicy:
-    Type: AWS::IAM::Policy
+  APIEcsSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      PolicyName: !Sub ${PjName}-task-execution-role-policy
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action: !Ref AllowEcsPolicy
-            Resource: "*"
-        Roles:
-          - Ref: EcsExecutionRole
+      IpProtocol: tcp
+      FromPort: 3000
+      ToPort: 3000
+      CidrIp: !GetAtt VPC.CidrBlock
+      GroupId: !Ref APIEcsSecurityGroup
+      SourceSecurityGroupId: !Ref APIEcsSecurityGroup
+
+  APIEcsSecurityGroupEgress:
+    Type: AWS::EC2::SecurityGroupEgress
+    Properties:
+      IpProtocol: -1
+      FromPort: 0
+      ToPort: 0
+      CidrIp: 0.0.0.0/0
+      GroupId: !Ref APIEcsSecurityGroup
+      SourceSecurityGroupId: !Ref APIEcsSecurityGroup
+
+  APILoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Name: !Sub ${ProjectName}-api-alb
+      Scheme: internet-facing
+      Subnets: # publicなものに紐づける
+        - !Ref APISubnet
+      Type: application
+      SecurityGroups:
+        - !Ref APIElbSecurityGroup
+
+  APIElbListenerHTTP: 
+    Type: "AWS::ElasticLoadBalancingV2::Listener"
+    Properties: 
+      Port: 80
+      Protocol: HTTP
+      DefaultActions: 
+        - Type: redirect
+          RedirectConfig: 
+            Host: '#{host}'
+            Path: '/#{path}'
+            Port: 443
+            Protocol: HTTPS
+            Query: '#{query}'
+            StatusCode: HTTP_301
+      LoadBalancerArn: !Ref APILoadBalancer
+
+  APIElbListenerHTTPS:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      Port: 443
+      Protocol: HTTPS
+      Certificates:
+        - CertificateArn: !Ref APICertificate
+      DefaultActions:
+        - TargetGroupArn: !Ref TargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref APILoadBalancer
+
+  APITargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPath: /health
+      HealthCheckPort: 3000
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 6
+      HealthyThresholdCount: 2
+      Name: !Sub ${ProjectName}-api-ecs-target-group
+      Port: 3000
+      Protocol: HTTP
+      UnhealthyThresholdCount: 3
+      TargetType: ip
+      VpcId: !Ref VPC
+
+  APIListenerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - Type: forward
+          TargetGroupArn: !Ref APITargetGroup
+          Order: 1
+      Conditions:
+        - Field: path-pattern
+          Values:
+            - "*"
+      ListenerArn: !Ref HttpListener
+      Priority: 100
   
-  EcsTaskRole:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ecs-tasks.amazonaws.com
-                - events.amazonaws.com
-              Action:
-                - sts:AssumeRole
-        ManagementPolicyArns:
-          - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole
-        RoleName: !Sub ${PjName}-task-role
-
-  EcsTaskRolePolicy:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: !Sub ${PjName}-task-role-policy
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action: !Ref AllowEcsPolicy
-            Resource: "*"
-        Roles:
-          - Ref: EcsTaskRole
-
-  Repository:
+  APIRepository:
     Type: AWS::ECR::Repository
     Properties:
-      RepositoryName: !Sub ${PjName}-api-repository
+      RepositoryName: !Sub ${ProjectName}-api-repository
 
-  Cluster:
+  APICluster:
     Type: AWS::ECS::Cluster
     Properties:
-      ClusterName: !Sub ${PjName}-api-cluster
-  
-  TaskDefinition:
+      ClusterName: !Sub ${ProjectName}-api-cluster
+
+  APIService:
+    Type: AWS::ECS::Service
+    Properties:
+      Cluster: !Ref APICluster
+      LaunchType: FARGATE
+      DesiredCount: 1
+      TaskDefinition: !Ref APITaskDefinition
+      EnableExecuteCommand: true
+      NetworkConfiguration:
+        AwsvpcConfiguration:
+          AssignPublicIp: ENABLED
+          SecurityGroups:
+            - !Ref APIEcsSecurityGroup
+          Subnets:
+            - !Ref APISubnet
+      LoadBalancers:
+        - TargetGroupArn: !Ref APITargetGroup
+          ContainerName: api
+          ContainerPort: 3000
+
+  APITaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: !Sub ${PjName}-api
+      Family: !Sub ${ProjectName}-api
       RequiresCompatibilities:
         - FARGATE
       Cpu: 256
       Memory: 512
       NetworkMode: awsvpc
-      ExecutionRoleArn: !GetAtt EcsTaskExecutionRole.Arn
-      TaskRoleArn: !GetAtt EcsTaskRolw.Arn
+      ExecutionRoleArn: !GetAtt APIEcsTaskExecutionRole.Arn
+      TaskRoleArn: !GetAtt APIEcsTaskRole.Arn
       ContainerDefinitions:
         - Name: api
-          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${Repository}
+          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${APIRepository}
           PortMappings:
             - ContainerPort: 80
               Protocol: tcp
@@ -233,5 +402,134 @@ Resources:
             #   ValueFrom: 
             # - Name:
             #   ValueFrom: 
-  TargetGroup:
+
+  APIEcsTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+                - events.amazonaws.com
+              Action:
+                - sts:AssumeRole
+        ManagementPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole
+        RoleName: !Sub ${ProjectName}-task-role
+
+  APIEcsTaskRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${ProjectName}-task-role-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: !Ref AllowEcsPolicy
+            Resource: "*"
+        Roles:
+          - Ref: APIEcsTaskRole
+
+  APIEcsTaskExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ecs-tasks.amazonaws.com
+                - events.amazonaws.com
+              Actions:
+                - sts:AssumeRole
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceEventsRole
+        RoleName: !Sub ${ProjectName}-task-execution-role
   
+  APIEcsTaskExecutionRolePolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: !Sub ${ProjectName}-task-execution-role-policy
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: !Ref AllowEcsPolicy
+            Resource: "*"
+        Roles:
+          - Ref: EcsExecutionRole
+
+  APIEcsLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /ecs/${ProjectName}
+
+  #----------
+  # Web
+  #----------
+
+  WebS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${ProjectName}-web-assets
+  
+  CloudFrontOriginAccessIdentity:
+    Type: AWS::CloudFront::CloudFrontOriginAccessIdentity
+    Properties:
+      CloudFrontOriginAccessIdentityConfig:
+        Comment: !Sub access-identity-${WebS3Bucket}
+
+  WebS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebS3Bucket
+      PolicyDocument:
+        Statement: 
+          - Action: s3:GetObject
+            Effect: Allow
+            Resource: !Sub "arn:aws:s3:::${WebS3Bucket}/*"
+            Principal:
+              CanonicalUser: !GetAtt CloudFrontOriginAccessIdentity.S3CanonicalUserId
+        
+
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        PriceClass: PriceClass_200
+        Aliases:
+          - !Ref: Domain
+        Origins:
+          - DomainName: !GetAtt WebS3Bucket.RegionalDomainName
+            Id: !Sub ${ProjectName}-web-assets-s3
+            S3OriginConfig:
+              OriginAccessIdentity: !Sub origin-access-identity/cloudfront/${CloudFrontOriginAccessIdentity}
+    DefaultRootObject: index.html
+    DefaultCacheBehavior:
+      TargetOriginId: !Sub ${ProjectName}-web-assets-s3
+      ViewerProtocolPolicy: redirect-to-https
+      AllowedMethods:
+        - GET
+        - HEAD
+      CacheMethods:
+        - GET
+        - HEAD
+      DefaultTTL: 3600
+      MaxTTL: 86400
+      MinTTL: 0
+      Compress: true # ファイル圧縮設定
+      ForwardedValues:
+        Cookies: 
+          Forward: none # リクエストを Amazon S3 オリジンに転送するキャッシュ動作の場合none
+          QueryString: false
+      ViewerCertificate:
+        SslSupportMethod: sni-only
+        MinimumProtocolVersion: TLSv1.2_2021 # CloudFrontがサポートするセキュリティポリシー
+        AcmCertificateArn: !Ref WebCertificate
+      HttpVersion: http2
+      Enabled: true
