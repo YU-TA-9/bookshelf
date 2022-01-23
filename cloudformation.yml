@@ -4,14 +4,14 @@ Description: Infrastructure of Reading Management WEB
 Parameters:
   ProjectName:
     Type: String
-  VPCCird:
+  VPCCidr:
     Type: String
     Default: 10.0.0.0/16
-  APICird:
+  APICidr:
     Type: String
   DBCidrA:
     Type: String
-  DBCirdC:
+  DBCidrC:
     Type: String
   DBVersion:
     Type: Number
@@ -33,7 +33,7 @@ Resources:
   VPC:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: !Ref VPCCird
+      CidrBlock: !Ref VPCCidr
       EnableDnsSupport: true
       Tags:
         - Key: Name
@@ -108,15 +108,6 @@ Resources:
           HostedZoneId: !Ref HostedZone
       ValidationMethod: DNS
 
-  WebCertificate:
-    Type: AWS::CertificateManager::Certificate
-    Properties:
-      DomainName: !Sub api.${Domain}
-      DomainValidationOptions:
-        - DomainName: !Sub api.${Domain}
-          HostedZoneId: !Ref HostedZone
-      ValidationMethod: DNS
-
   #----------
   # DB
   #----------
@@ -125,7 +116,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: ap-northeast-1a
-      CidrBlock: !FindInMap ["SubnetConfig", "DB", "CIDR-A"]
+      CidrBlock: !Ref DBCidrA
       VpcId: !Ref VPC
       Tags:
         - Key: Name
@@ -135,7 +126,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: ap-northeast-1c
-      CidrBlock: !FindInMap ["SubnetConfig", "DB", "CIDR-C"]
+      CidrBlock: !Ref DBCidrC
       VpcId: !Ref VPC
       Tags:
         - Key: Name
@@ -503,7 +494,7 @@ Resources:
         Enabled: true
         PriceClass: PriceClass_200
         Aliases:
-          - !Ref: Domain
+          - !Ref Domain
         Origins:
           - DomainName: !GetAtt WebS3Bucket.RegionalDomainName
             Id: !Sub ${ProjectName}-web-assets-s3
