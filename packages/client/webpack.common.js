@@ -2,7 +2,6 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-  mode: 'development', // TODO: 調整必要
   entry: path.resolve(__dirname, 'src/index.tsx'),
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -43,11 +42,4 @@ module.exports = {
       template: path.resolve(__dirname, 'src/index.html'),
     }),
   ],
-  devServer: {
-    port: 4000,
-    static: {
-      directory: path.resolve(__dirname, 'dist'),
-    },
-    historyApiFallback: true,
-  },
 };
