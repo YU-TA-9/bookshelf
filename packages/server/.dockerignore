@@ -1,9 +1,0 @@
-/db
-/dist
-/middlewares
-/node_modules
-/test
-
-.env
-Dockerfile
-README.md
