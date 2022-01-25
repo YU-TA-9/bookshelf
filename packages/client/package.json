@@ -7,7 +7,7 @@
     "dev": "webpack-dev-server --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "openapi-generator:local": "npx openapi-generator-cli generate -i ../swagger/swagger.yml -g typescript-axios -o ./src/api/generated --additional-properties=arrowUnicodeIdentifiers=true",
-    "openapi-generator:prod": "npx openapi-generator-cli generate -i ../swagger/swagger.yml -g typescript-axios -o ./src/api/generated --additional-properties=arrowUnicodeIdentifiers=true --server-variables='environment=https://api.bookshelf.yu-ta-9.com'"
+    "openapi-generator:prod": "npx openapi-generator-cli generate -i ./swagger.yml -g typescript-axios -o ./src/api/generated --additional-properties=arrowUnicodeIdentifiers=true --server-variables='environment=https://api.bookshelf.yu-ta-9.com'"
   },
   "devDependencies": {
     "@babel/core": "^7.16.5",

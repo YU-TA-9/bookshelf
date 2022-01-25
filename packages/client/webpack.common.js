@@ -9,7 +9,7 @@ module.exports = {
     assetModuleFilename: 'assets/[hash][ext][query]',
   },
   resolve: {
-    extensions: ['.js', 'jsx', '.ts', '.tsx'],
+    extensions: ['.tsx', '.ts', '.jsx', '.js'],
   },
   module: {
     rules: [
@@ -19,6 +19,7 @@ module.exports = {
       },
       {
         test: [/\.ts$/, /\.tsx$/],
+        exclude: /node_modules/,
         use: [
           {
             loader: 'babel-loader',
