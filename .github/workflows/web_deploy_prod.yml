@@ -1,0 +1,27 @@
+name: Deploy web source to prod
+# 一旦手動トリガー
+# on:
+#   push:
+#     branches:
+#       - master
+on: workflow_dispatch
+jobs:
+  build-push-deploy-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          token: ${{ secrets.PERSONAL_TOKEN }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: Build image & Push assets to s3
+        run: |
+          DOCKER_BUILDKIT=1 docker build . -t web_prod_assets --target web-production --progress=tty
+          docker run -d --name web_prod_assets web_prod_assets:latest sleep 300
+          docker cp web_prod_assets:/app/dist /tmp/release
+          aws s3 sync /tmp/release s3://bookshelf-web-assets/
