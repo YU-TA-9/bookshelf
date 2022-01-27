@@ -21,7 +21,7 @@ jobs:
 
       - name: Build image & Push assets to s3
         run: |
-          DOCKER_BUILDKIT=1 docker build . -t web_prod_assets --target web-production --progress=tty
-          docker run -d --name web_prod_assets web_prod_assets:latest sleep 300
-          docker cp web_prod_assets:/app/dist /tmp/release
+          DOCKER_BUILDKIT=1 docker build . -t web-prod-assets --target web-production --progress=tty
+          docker run -d --name web-prod-assets web-prod-assets:latest sleep 300
+          docker cp web-prod-assets:/app/dist /tmp/release
           aws s3 sync /tmp/release s3://bookshelf-web-assets/
