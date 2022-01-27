@@ -5,18 +5,20 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BooksModule } from './books/books.module';
 
+// TODO: CORS設定を付加する
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: './.env',
+      envFilePath: process.env.NODE_ENV === 'production' ? '' : '.env',
+      ignoreEnvFile: process.env.NODE_ENV === 'production' ? true : false,
     }),
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
-      port: 13306,
-      username: 'root',
-      password: 'root',
+      host: process.env.DB_HOST,
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USER_NAME,
+      password: process.env.DB_PASSWORD,
       database: 'reading_management',
       entities: ['./dist/**/*.entity{.ts,.js}'],
       migrations: ['./dist/src/migrations/*{.ts,.js}'],
