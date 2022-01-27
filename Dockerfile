@@ -21,7 +21,7 @@ COPY ./packages/swagger/swagger.yml swagger.yml
 RUN yarn install
 
 # local
-# FROM web-base AS development
+# FROM web-base AS web-development
 
 # RUN yarn openapi-generator:local
 # RUN yarn build
@@ -35,6 +35,7 @@ RUN yarn build
 #---------
 # API
 #---------
+
 FROM node:16-buster-slim AS api-base
 
 ENV APP_DIR /app
@@ -49,12 +50,12 @@ COPY ./packages/server .
 RUN yarn install
 
 # local
-FROM api-base AS development
+FROM api-base AS api-development
 
-CMD ["yarn", "start:dev"]
+ENTRYPOINT  ["yarn", "start:dev"]
 
 # prod
-FROM api-base AS production
+FROM api-base AS api-production
 
 ENV APP_DIR /app
 WORKDIR ${APP_DIR}
@@ -62,5 +63,4 @@ WORKDIR ${APP_DIR}
 ENV NODE_ENV production
 RUN yarn build
 
-# FIXME: 運用時は消す
-CMD ["yarn", "start:prod"]
+# ENTRYPOINT [ "yarn", "start:prod" ]
