@@ -1,4 +1,4 @@
-name: Deploy web source to prod
+name: Deploy api source to prod
 # 一旦手動トリガー
 # on:
 #   push:
