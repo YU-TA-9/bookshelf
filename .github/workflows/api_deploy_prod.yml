@@ -1,0 +1,32 @@
+name: Deploy web source to prod
+# 一旦手動トリガー
+# on:
+#   push:
+#     branches:
+#       - master
+on: workflow_dispatch
+jobs:
+  build-push-deploy-image:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with: 
+          token: ${{ secrets.PERSONAL_TOKEN }}
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build image & Push image to Amazon ECR
+        run: |
+          DOCKER_BUILDKIT=1 docker build . -t api-prod --target api-production --progress=tty --cache-from=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/api:latest --build-arg BUILDKIT_INLINE_CACHE=1
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/api:latest
+      
+      - name: Deployment
+        run: aws ecs update-service --service bookshelf-api-service --cluster bookshelf-api-cluster --force-new-deployment --enable-execute-command
