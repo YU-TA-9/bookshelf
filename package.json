@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "author": "yu-ta-9",
-  "license": "MIT",
+  "license": "UNLICENSED",
   "private": true,
   "workspaces": {
     "packages": [

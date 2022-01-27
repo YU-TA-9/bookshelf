@@ -2,7 +2,9 @@
   "name": "client",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT",
+  "author": "yu-ta-9",
+  "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "dev": "webpack-dev-server --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
