@@ -25,8 +25,8 @@ jobs:
 
       - name: Build image & Push image to Amazon ECR
         run: |
-          DOCKER_BUILDKIT=1 docker build . -t api-prod --target api-production --progress=tty --cache-from=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/api:latest --build-arg BUILDKIT_INLINE_CACHE=1
-          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/api:latest
+          DOCKER_BUILDKIT=1 docker build . -t api-prod --target api-production --progress=tty --cache-from=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/bookshelf-api-repository:latest --build-arg BUILDKIT_INLINE_CACHE=1
+          docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-northeast-1.amazonaws.com/bookshelf-api-repository:latest
       
       - name: Deployment
         run: aws ecs update-service --service bookshelf-api-service --cluster bookshelf-api-cluster --force-new-deployment --enable-execute-command
