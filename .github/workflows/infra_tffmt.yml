@@ -2,7 +2,7 @@ name: terraform fmt
 on: 
   pull_request:
     paths: 
-      - "/packages/infra/**"
+      - "packages/infra/**"
 jobs:
   tffmt:
     name: terraform fmt
