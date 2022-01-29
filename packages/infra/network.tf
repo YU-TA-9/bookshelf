@@ -7,13 +7,13 @@ data "aws_region" "current" {}
 # vpc
 
 resource "aws_vpc" "vpc" {
-  cidr_block = var.vpc_cidr
-  enable_dns_support = true
+  cidr_block           = var.vpc_cidr
+  enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
     Name = "${local.project_name}-vpc"
-  } 
+  }
 }
 
 # subnet
@@ -35,13 +35,14 @@ resource "aws_subnet" "public-subnet" {
 # DB用
 resource "aws_subnet" "private-subnet" {
   vpc_id = aws_vpc.vpc.id
-  count = length(var.availability_zones)
+  count  = length(var.availability_zones)
 
-  cidr_block =  cidrsubnet(aws_vpc.vpc.cidr_block, 8, 21 + count.index)
+  cidr_block              = cidrsubnet(aws_vpc.vpc.cidr_block, 8, 21 + count.index)
+  availability_zone       = element(var.availability_zones, count.index)
   map_public_ip_on_launch = true
 
   tags = {
-    Name =  "${local.project_name}-private-subnet-${count.index}"
+    Name = "${local.project_name}-private-subnet-${count.index}"
   }
 }
 
@@ -63,7 +64,7 @@ resource "aws_route_table" "route-table" {
 
   tags = {
     Name = "${local.project_name}-route-table"
-  } 
+  }
 }
 
 # route table association
