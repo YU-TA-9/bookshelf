@@ -3,7 +3,7 @@
 
 resource "aws_s3_bucket" "web-assets" {
   bucket = "${local.project_name}-web-assets"
-  acl = "private"
+  acl    = "private"
 
   server_side_encryption_configuration {
     rule {
@@ -26,10 +26,10 @@ resource "aws_s3_bucket_policy" "web-assets-bucket-policy" {
 
 data "aws_iam_policy_document" "web-assets-bucket-policy-document" {
   statement {
-    sid = "AllowReadAccessFromCloudFront"
+    sid    = "AllowReadAccessFromCloudFront"
     effect = "Allow"
     principals {
-      type = "AWS"
+      type        = "AWS"
       identifiers = [aws_cloudfront_origin_access_identity.web-origin-access-identity.iam_arn]
     }
     actions = [

@@ -37,5 +37,18 @@
         "cloud*formation/*.yaml",
         "cloud*formation/*.yml"
     ]
+  },
+  "terraform-ls.rootModules": [
+    "packages/infra/",
+  ],
+  "[terraform]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
+  },
+  "[terraform-vars]": {
+    "editor.defaultFormatter": "hashicorp.terraform",
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file"
   }
 }
