@@ -30,7 +30,7 @@ data "aws_iam_policy_document" "web-assets-bucket-policy-document" {
     effect = "Allow"
     principals {
       type = "AWS"
-      identifiers = [aws_cloudfront_origin_access_identity.web-origin_access_identity.iam_arn]
+      identifiers = [aws_cloudfront_origin_access_identity.web-origin-access-identity.iam_arn]
     }
     actions = [
       "s3:GetObject",

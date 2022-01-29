@@ -7,11 +7,12 @@ resource "aws_lb" "api-lb" {
 
   enable_deletion_protection = true
 
-  access_logs {
-    # bucket  = aws_s3_bucket.lb-log.bucket
-    # prefix  = "${local.project_name}-api-lb"
-    enabled = false # TODO: ログを取るか検討
-  }
+  # TODO: ログを取るか検討
+  # access_logs {
+  #   bucket  = aws_s3_bucket.lb-log.bucket
+  #   prefix  = "${local.project_name}-api-lb"
+  #   enabled = true
+  # }
 }
 
 resource "aws_lb_target_group" "api-lb-tg" {
