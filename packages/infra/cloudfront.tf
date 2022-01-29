@@ -47,7 +47,7 @@ resource "aws_cloudfront_distribution" "web-distribution" {
   viewer_certificate {
     cloudfront_default_certificate = false
 
-    acm_certificate_arn = aws_acm_certificate.web-certificate.arn
+    acm_certificate_arn = aws_acm_certificate.web-cert.arn
 
     # CloudFrontがサポートするセキュリティポリシー。
     # デフォルトを設定

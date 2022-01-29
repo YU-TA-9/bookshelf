@@ -121,7 +121,7 @@ resource "aws_db_instance" "rds-instance" {
   monitoring_role_arn       = null # 要調整、拡張モニタリングを使う場合は指定する
   skip_final_snapshot = false # falseの場合、final_snapshot_identifierの指定必須
   final_snapshot_identifier = "${local.project_name}-${random_string.final_snapshot_identifier_suffix.result}"
-  maintenance_window        =  "mon 01:30-02:30 JST"
+  maintenance_window        =  "sun:16:30-sun:17:30" // JSTでmon 01:30-02:30
   performance_insights_enabled = false # MEMO: インスタンスクラスによって可否が変わるので有効にする際は調査する
   deletion_protection = true # 要調整
 
