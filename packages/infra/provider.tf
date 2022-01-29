@@ -1,5 +1,5 @@
 provider "aws" {
-  region = "ap-north-east-1"
+  region = "ap-northeast-1"
 }
 
 provider "aws" {
