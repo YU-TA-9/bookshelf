@@ -60,7 +60,7 @@ data "aws_iam_policy_document" "web-assets-bucket-policy-document" {
     effect = "Allow"
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${var.aws_account_id}:user/${var.aws_github_actions_user}"]
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:user/${var.aws_github_actions_user}"]
     }
     actions = [
       "s3:ListBucket",
