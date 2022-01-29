@@ -8,9 +8,9 @@ resource "aws_lb" "api-lb" {
   enable_deletion_protection = true
 
   access_logs {
-    bucket  = aws_s3_bucket.lb-log.bucket
-    prefix  = "${local.project_name}-api-lb"
-    enabled = true
+    # bucket  = aws_s3_bucket.lb-log.bucket
+    # prefix  = "${local.project_name}-api-lb"
+    enabled = false # TODO: ログを取るか検討
   }
 }
 

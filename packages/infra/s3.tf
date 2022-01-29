@@ -19,12 +19,12 @@ resource "aws_s3_bucket" "web-assets" {
   }
 }
 
-resource "aws_bucket_policy" "web-assets-bucket_policy" {
+resource "aws_s3_bucket_policy" "web-assets-bucket-policy" {
   bucket = aws_s3_bucket.web-assets.bucket
   policy = data.aws_iam_policy_document.web-assets-bucket-policy-document.json
 }
 
-resource "aws_iam_policy_document" "web-assets-bucket-policy-document" {
+data "aws_iam_policy_document" "web-assets-bucket-policy-document" {
   statement {
     sid = "AllowReadAccessFromCloudFront"
     effect = "Allow"

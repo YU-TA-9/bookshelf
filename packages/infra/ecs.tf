@@ -94,3 +94,82 @@ resource "aws_ecs_service" "api-service" {
     ignore_changes = [desired_count]
   }
 }
+
+# IAM 関連リソース
+
+data "aws_iam_policy_document" "ecs-task-assume-role" {
+  statement {
+    actions = ["sts:AssumeRole"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+}
+
+# task 実行のための IAM 関連リソース (ecs agent に付与される IAM role)
+
+resource "aws_iam_role" "ecs-task-execution-role" {
+  name               = "${local.project_name}-ecs-task-execution-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs-task-assume-role.json
+}
+
+resource "aws_iam_role_policy_attachment" "ecs-task-execution-role-attach" {
+  role       = aws_iam_role.ecs-task-execution-role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+}
+
+resource "aws_iam_role_policy" "ecs-task-execution-ssm-getparameters" {
+  name = "ecs-task-execution-secret-parameterstore"
+  role = aws_iam_role.ecs-task-execution-role.id
+
+  policy = <<-EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "ssm:GetParameters"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+          "*"
+        ]
+      }
+    ]
+  }
+  EOF
+}
+
+# コンテナのための IAM 関連リソース (ECS で実行されるコンテナプロセスに付与される IAM role)
+
+resource "aws_iam_role" "ecs-task-role" {
+  name               = "${local.project_name}-ecs-task-role"
+  assume_role_policy = data.aws_iam_policy_document.ecs-task-assume-role.json
+}
+
+resource "aws_iam_role_policy" "ecs-task-ssm-ecs-exec" {
+  name = "ecs-task-ssm-ecs-exec"
+  role = aws_iam_role.ecs-task-role.id
+
+  policy = <<-EOF
+  {
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "ssmmessages:CreateControlChannel",
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:OpenDataChannel"
+        ],
+        "Effect": "Allow",
+        "Resource": [
+          "*"
+        ]
+      }
+    ]
+  }
+  EOF
+}
