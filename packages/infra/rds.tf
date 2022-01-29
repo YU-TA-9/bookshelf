@@ -1,5 +1,5 @@
 resource "aws_db_subnet_group" "rds-subnet-group" {
-  name = "rds-subnet-group"
+  name       = "rds-subnet-group"
   subnet_ids = aws_subnet.private-subnet.*.id
 }
 
@@ -108,22 +108,22 @@ resource "aws_db_instance" "rds-instance" {
 
   multi_az = false
 
-  storage_type = "gp2"
+  storage_type      = "gp2"
   allocated_storage = 20
   storage_encrypted = true
 
-  backup_retention_period = 1 # 課金されるので調整
-  apply_immediately           = true
-  allow_major_version_upgrade = false
-  auto_minor_version_upgrade  = false
-  copy_tags_to_snapshot       = true
-  monitoring_interval = 0 # 要調整、拡張モニタリング設定
-  monitoring_role_arn       = null # 要調整、拡張モニタリングを使う場合は指定する
-  skip_final_snapshot = false # falseの場合、final_snapshot_identifierの指定必須
-  final_snapshot_identifier = "${local.project_name}-${random_string.final_snapshot_identifier_suffix.result}"
-  maintenance_window        =  "sun:16:30-sun:17:30" // JSTでmon 01:30-02:30
-  performance_insights_enabled = false # MEMO: インスタンスクラスによって可否が変わるので有効にする際は調査する
-  deletion_protection = true # 要調整
+  backup_retention_period      = 1 # 課金されるので調整
+  apply_immediately            = true
+  allow_major_version_upgrade  = false
+  auto_minor_version_upgrade   = false
+  copy_tags_to_snapshot        = true
+  monitoring_interval          = 0     # 要調整、拡張モニタリング設定
+  monitoring_role_arn          = null  # 要調整、拡張モニタリングを使う場合は指定する
+  skip_final_snapshot          = false # falseの場合、final_snapshot_identifierの指定必須
+  final_snapshot_identifier    = "${local.project_name}-${random_string.final_snapshot_identifier_suffix.result}"
+  maintenance_window           = "sun:16:30-sun:17:30" // JSTでmon 01:30-02:30
+  performance_insights_enabled = false                 # MEMO: インスタンスクラスによって可否が変わるので有効にする際は調査する
+  deletion_protection          = true                  # 要調整
 
   tags = {
     Name = "${local.project_name}-rds"

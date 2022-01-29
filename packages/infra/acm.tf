@@ -12,7 +12,7 @@ resource "aws_acm_certificate" "api-cert" {
 }
 
 resource "aws_acm_certificate" "web-cert" {
-  domain_name = var.domain
+  domain_name       = var.domain
   validation_method = "DNS"
 
   # Distributionから使用する場合us-east-1に設置しないといけない

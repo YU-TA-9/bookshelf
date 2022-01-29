@@ -12,7 +12,7 @@ resource "aws_ecs_task_definition" "api-task-def" {
   execution_role_arn       = aws_iam_role.ecs-task-execution-role.arn
   task_role_arn            = aws_iam_role.ecs-task-role.arn
 
-  cpu = 256
+  cpu    = 256
   memory = 512
 
   container_definitions = <<EOL
