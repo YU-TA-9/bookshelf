@@ -1,0 +1,21 @@
+name: terraform lint
+on: 
+  pull_request:
+    paths: 
+      - "/packages/infra/**"
+jobs:
+  tflint:
+    name: runner / tflint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+
+      - name: tflint
+        uses: reviewdog/action-tflint@master
+        with:
+          github_token: ${{ secrets.PERSONAL_TOKEN }}
+          reporter: github-pr-review
+          fail_on_error: true
+          filter_mode: nofilter

@@ -1,0 +1,19 @@
+name: terraform fmt
+on: 
+  pull_request:
+    paths: 
+      - "/packages/infra/**"
+jobs:
+  tffmt:
+    name: terraform fmt
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Clone repo
+        uses: actions/checkout@v2
+
+      - name: terraform checkout
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Terraform fmt
+        run: terraform fmt -check
