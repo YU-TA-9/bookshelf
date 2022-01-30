@@ -19,9 +19,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ./ts-node/register ./node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "typeorm",
-    "migration:generate": "yarn build && yarn typeorm migration:generate",
-    "migration:run": "yarn build && yarn typeorm migration:run",
+    "typeorm": "npx ts-node ./node_modules/.bin/typeorm",
+    "migration:generate": "yarn build && yarn typeorm migration:generate -f ./src/configs/ormconfig.ts",
+    "migration:run": "yarn build && yarn typeorm migration:run -f ./src/configs/ormconfig.ts",
     "swagger:generate": "yarn build && ts-node ./dist/src/tasks/exportOpenAPIDocument.js",
     "swagger:check": "yarn build && ts-node ./dist/src/tasks/checkOpenAPIDocument.js"
   },
