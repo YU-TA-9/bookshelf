@@ -61,7 +61,7 @@ resource "aws_ecs_task_definition" "api-task-def" {
       {
         "name": "RAKUTEN_API_ID",
         "valueFrom": "${aws_ssm_parameter.rakuten-api-id.arn}"
-      },
+      }
     ]
   }
 ]
