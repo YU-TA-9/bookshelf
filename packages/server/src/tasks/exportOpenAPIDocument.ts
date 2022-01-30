@@ -27,5 +27,8 @@ const bootstrap = async (): Promise<void> => {
   const yamlPath = path.join('..', 'swagger/swagger.yml');
 
   await fs.writeFile(yamlPath, yamlDocument);
+
+  // MEMO: 明示的に終了させないとプロンプトが起動しない
+  process.exit(0);
 };
 bootstrap();

@@ -105,10 +105,13 @@ info:
   contact: {}
 tags: []
 servers:
-  - url: localhost:3000/api
-    description: local
-  - url: api.bookshelf.yu-ta-9.com/api
-    description: production
+  - url: '{environment}'
+    variables:
+      environment:
+        enum:
+          - http://localhost:3000/api
+          - https://api.bookshelf.yu-ta-9.com/api
+        default: http://localhost:3000/api
 components:
   schemas:
     Book:

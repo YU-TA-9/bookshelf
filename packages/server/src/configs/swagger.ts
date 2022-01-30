@@ -4,6 +4,14 @@ export const swaggerConfig = new DocumentBuilder()
   .setTitle('Reading Management API')
   .setDescription('API Docs')
   .setVersion('1.0')
-  .addServer('localhost:3000/api', 'local')
-  .addServer('api.bookshelf.yu-ta-9.com/api', 'production')
+  // MEMO: openapi-generatorのcliの引数指定でドメインを変更させるため、以下の記法で表現している
+  .addServer('{environment}', undefined, {
+    environment: {
+      enum: [
+        'http://localhost:3000/api',
+        'https://api.bookshelf.yu-ta-9.com/api', // TODO: NODEの環境変数から取得してコードに残らないようにしたい
+      ],
+      default: 'http://localhost:3000/api',
+    },
+  })
   .build();
