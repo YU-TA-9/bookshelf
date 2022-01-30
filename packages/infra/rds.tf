@@ -103,6 +103,7 @@ resource "aws_db_instance" "rds-instance" {
   engine_version = "8.0.23"
   instance_class = "db.t3.micro"
 
+  name     = local.project_name
   username = "root"
   password = "password" # 後で変える
 
@@ -112,7 +113,7 @@ resource "aws_db_instance" "rds-instance" {
   allocated_storage = 20
   storage_encrypted = true
 
-  backup_retention_period      = 1 # 課金されるので調整
+  backup_retention_period      = 0 # 課金されるので調整
   apply_immediately            = true
   allow_major_version_upgrade  = false
   auto_minor_version_upgrade   = false
