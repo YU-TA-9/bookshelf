@@ -1,4 +1,4 @@
-# [WIP]Reading-Management-Web
+# [WIP]Bookshelf
 
 読書管理 WEB アプリの monorepo
 
@@ -77,3 +77,9 @@ If there are differences, it is failed.
 ```shell
 $ yarn sr swagger:check
 ```
+
+## Infra
+
+- AWS
+- Terraform
+- Terraform Cloud
