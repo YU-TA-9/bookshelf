@@ -5,8 +5,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { BooksModule } from './books/books.module';
 import { ormconfig } from './configs/ormconfig';
+import { HealthzModule } from './healthz/healthz.module';
 
-// TODO: CORS設定を付加する
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -22,6 +22,7 @@ import { ormconfig } from './configs/ormconfig';
         return configService.get('database');
       },
     }),
+    HealthzModule,
     BooksModule,
   ],
   controllers: [AppController],

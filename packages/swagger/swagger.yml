@@ -1,13 +1,20 @@
 openapi: 3.0.0
 paths:
-  /:
+  /api:
     get:
       operationId: AppController_getHello
       parameters: []
       responses:
         '200':
           description: ''
-  /books:
+  /healthz:
+    get:
+      operationId: HealthzController_getHealthz
+      parameters: []
+      responses:
+        '200':
+          description: ''
+  /api/books:
     get:
       operationId: BooksController_getBookList
       parameters: []
@@ -36,7 +43,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Book'
-  /books/{id}:
+  /api/books/{id}:
     get:
       operationId: BooksController_getBook
       parameters:
@@ -63,7 +70,7 @@ paths:
       responses:
         '200':
           description: ''
-  /books/self:
+  /api/books/self:
     post:
       operationId: BooksController_createBookSelf
       parameters: []
@@ -80,7 +87,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Book'
-  /books/memo/{id}:
+  /api/books/memo/{id}:
     patch:
       operationId: BooksController_patchBookMemo
       parameters:
@@ -109,9 +116,9 @@ servers:
     variables:
       environment:
         enum:
-          - http://localhost:3000/api
-          - https://api.bookshelf.yu-ta-9.com/api
-        default: http://localhost:3000/api
+          - http://localhost:3000
+          - https://api.bookshelf.yu-ta-9.com
+        default: http://localhost:3000
 components:
   schemas:
     Book:
