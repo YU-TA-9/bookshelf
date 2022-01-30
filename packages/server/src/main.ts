@@ -1,3 +1,4 @@
+import { RequestMethod } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
@@ -13,7 +14,10 @@ async function bootstrap() {
     methods: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS'],
   };
   app.enableCors(corsOptions);
-  app.setGlobalPrefix('api');
+  // FIXME: 共通化する
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: 'healthz', method: RequestMethod.GET }],
+  });
   await app.listen(3000);
 }
 bootstrap();

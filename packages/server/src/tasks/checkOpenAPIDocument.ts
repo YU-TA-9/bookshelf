@@ -5,6 +5,7 @@ import { AppModule } from '../app.module';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs-extra';
 import * as path from 'path';
+import { RequestMethod } from '@nestjs/common';
 
 const load = (filename: string) => {
   const yamlText = fs.readFileSync(filename, 'utf8');
@@ -30,6 +31,10 @@ const bootstrap = async (): Promise<void> => {
   }).compile();
 
   const app = await testingModule.createNestApplication();
+  // FIXME: 共通化する
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: 'healthz', method: RequestMethod.GET }],
+  });
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   const newDump = dump(document);
 

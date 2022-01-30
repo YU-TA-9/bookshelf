@@ -8,10 +8,10 @@ export const swaggerConfig = new DocumentBuilder()
   .addServer('{environment}', undefined, {
     environment: {
       enum: [
-        'http://localhost:3000/api',
-        'https://api.bookshelf.yu-ta-9.com/api', // TODO: NODEの環境変数から取得してコードに残らないようにしたい
+        'http://localhost:3000',
+        'https://api.bookshelf.yu-ta-9.com', // TODO: NODEの環境変数から取得してコードに残らないようにしたい
       ],
-      default: 'http://localhost:3000/api',
+      default: 'http://localhost:3000',
     },
   })
   .build();
