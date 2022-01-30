@@ -17,15 +17,14 @@ export const BookDetail = (props) => {
   const { id } = useParams<Params>();
   const [book, setBook] = React.useState<Book>();
 
-  const [inputMarkdown, setInputMarkDown] = React.useState<string>(
-    book?.memo || '',
-  );
+  const [inputMarkdown, setInputMarkDown] = React.useState<string>('');
 
   // TODO: １回のみ呼ばれるようにする
   React.useEffect(() => {
     (async () => {
       const { data } = await api.booksControllerGetBook(Number(id));
       setBook(data);
+      setInputMarkDown(data.memo);
     })();
   }, []);
 
@@ -39,6 +38,7 @@ export const BookDetail = (props) => {
         const { data } = await api.booksControllerPatchBookMemo(Number(id), {
           memo: inputMarkdown,
         });
+        alert('メモが更新されました');
       } catch (e) {
         console.error(e);
       }

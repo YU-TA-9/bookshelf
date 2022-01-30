@@ -7,11 +7,11 @@ async function bootstrap() {
   const corsOptions = {
     origin:
       process.env.NODE_ENV === 'production'
-        ? ['bookshelf.yu-ta-9.com']
-        : ['localhost:4000'],
+        ? ['https://bookshelf.yu-ta-9.com']
+        : ['http://localhost:4000'],
     credentials: true,
     allowedHeaders: '*',
-    methods: ['GET', 'PUT', 'POST', 'DELETE', 'HEAD', 'OPTIONS'],
+    methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'HEAD', 'OPTIONS'],
   };
   app.enableCors(corsOptions);
   // FIXME: 共通化する

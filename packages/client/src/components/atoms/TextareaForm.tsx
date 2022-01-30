@@ -33,7 +33,6 @@ export const TextareaForm = ({ value, onChange }: Props) => {
 
     // 現在のカーソルの位置と、カーソルの左右の文字列を取得しておく
     const obj = textareaRef.current;
-    console.log(obj);
     var cursorPosition = obj.selectionStart;
     var cursorLeft = obj.value.substr(0, cursorPosition);
     var cursorRight = obj.value.substr(cursorPosition, obj.value.length);

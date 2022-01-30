@@ -25,17 +25,21 @@ export const BookList = ({ books }: Props) => {
 
   return (
     <div css={listWrap}>
-      {books.map((book) => (
-        <div css={item} key={book.id}>
-          <BookCard
-            title={book.name}
-            imageSrc={book.image_path}
-            onClick={() => {
-              handleDetailButton(book.id);
-            }}
-          />
-        </div>
-      ))}
+      {!books.length ? (
+        <p>本がありません</p>
+      ) : (
+        books.map((book) => (
+          <div css={item} key={book.id}>
+            <BookCard
+              title={book.name}
+              imageSrc={book.image_path}
+              onClick={() => {
+                handleDetailButton(book.id);
+              }}
+            />
+          </div>
+        ))
+      )}
     </div>
   );
 };
