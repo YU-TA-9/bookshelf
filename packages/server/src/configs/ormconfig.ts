@@ -10,7 +10,7 @@ export const ormconfig = () => ({
     password: process.env.DB_PASSWORD,
     database: 'bookshelf',
     entities: ['./dist/**/*.entity{.ts,.js}'],
-    migrations: ['./dist/src/migrations/*{.ts,.js}'],
+    migrations: ['./dist/**/migrations/*{.ts,.js}'],
     synchronize: false,
     connectTimeout: 30 * 1000,
     logging: true,
