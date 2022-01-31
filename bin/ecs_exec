@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+aws_profile="${1:-default}"
+
+cluster_name="bookshelf-api-cluster"
+container_name="api"
+
+last_task_id=$(aws --profile $aws_profile ecs list-tasks --cluster $cluster_name | jq -r ".taskArns[]" | rev | cut -d / -f 1 | rev | tail -1)
+
+aws --profile $aws_profile ecs execute-command --cluster $cluster_name --task $last_task_id --container $container_name --interactive --command "/bin/bash"
