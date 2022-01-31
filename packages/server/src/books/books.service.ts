@@ -44,6 +44,7 @@ export class BooksService {
     // set default
     book.status = Status.WAITING;
     book.category = CATEGORY_UNSET;
+    // TODO: 重複チェックでエラーレスポンスを返すようにする
     return await this.booksRepository.save(book);
   }
 
@@ -79,6 +80,7 @@ export class BooksService {
           book.status = Status.WAITING;
           book.category = CATEGORY_UNSET;
           book.image_path = data.largeImageUrl;
+          // TODO: 重複チェックでエラーレスポンスを返すようにする
           return this.booksRepository.save(book);
         }),
       );
