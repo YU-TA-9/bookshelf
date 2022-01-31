@@ -49,10 +49,10 @@ export class BooksService {
   }
 
   createBook(createBookDto: CreateBookDto): Observable<Promise<Book>> {
-    console.log('Rakuten ID:', process.env.RAKUTEN_APP_ID);
+    // TODO: RAKUTEN APPが正式なので直したい
     return this.httpService
       .get(
-        `https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&outOfStockFlag=1&isbn=${createBookDto.isbn}&applicationId=${process.env.RAKUTEN_APP_ID}`,
+        `https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&outOfStockFlag=1&isbn=${createBookDto.isbn}&applicationId=${process.env.RAKUTEN_API_ID}`,
       )
       .pipe(
         map((response) => {
