@@ -24,7 +24,9 @@ export const BookDetail = (props) => {
     (async () => {
       const { data } = await api.booksControllerGetBook(Number(id));
       setBook(data);
-      setInputMarkDown(data.memo);
+
+      const initialMemo = data.memo || '';
+      setInputMarkDown(initialMemo);
     })();
   }, []);
 

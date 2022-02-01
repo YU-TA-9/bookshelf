@@ -4,8 +4,6 @@ import { StatusLabel } from '../atoms/StatusLabel';
 import { dateText } from '../../utils/dateUtil';
 import { fontSize } from '../../styles/fontSize';
 import * as React from 'react';
-import { convertMarkdownToHTML } from '../../utils/sanitize';
-import { TextareaForm } from '../atoms/TextareaForm';
 import { MarkdownAndHTMLArea } from '../molecules/MarkdownAndHTMLArea';
 import { Button } from '../atoms/Button';
 
@@ -36,7 +34,7 @@ const buttonWrap = css`
 `;
 
 export const BookDetailCard = ({ book, markdown, onMarkdownChange }: Props) => {
-  const [showHTML, setShowHTML] = React.useState<boolean>(false);
+  const [showHTML, setShowHTML] = React.useState<boolean>(true);
 
   return (
     <>
