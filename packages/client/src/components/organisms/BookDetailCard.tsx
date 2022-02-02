@@ -30,7 +30,11 @@ const bookTitle = css`
 `;
 
 const buttonWrap = css`
-  margin-bottom: 8px;
+  margin-bottom: 16px;
+`;
+
+const markdownAreaWrap = css`
+  margin-bottom: 16px;
 `;
 
 export const BookDetailCard = ({ book, markdown, onMarkdownChange }: Props) => {
@@ -57,7 +61,7 @@ export const BookDetailCard = ({ book, markdown, onMarkdownChange }: Props) => {
           />
         </div>
       </div>
-      <div>
+      <div css={markdownAreaWrap}>
         <MarkdownAndHTMLArea
           value={markdown}
           onChange={onMarkdownChange}

@@ -5,6 +5,7 @@ const sidebar = css`
   background: #d8eefe;
   height: 100%;
   width: 100%;
+  padding: 16px;
 `;
 
 const itemList = css`

@@ -11,7 +11,6 @@ const headerText = css`
   font-weight: normal;
   font-size: ${fontSize.header};
   color: #ffffff;
-  border: 1px solid #000000;
 `;
 
 export const HeaderText = ({ text }: Props) => {
