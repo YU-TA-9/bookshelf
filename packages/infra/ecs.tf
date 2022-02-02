@@ -71,13 +71,13 @@ EOL
 resource "aws_ecs_service" "api-service" {
   depends_on = [aws_lb_listener.api-https]
 
-  name                                   = "${local.project_name}-api-service"
-  cluster                                = aws_ecs_cluster.api-cluster.name
-  launch_type                            = "FARGATE"
-  desired_count                          = 1
-  task_definition                        = aws_ecs_task_definition.api-task-def.arn
-  enable_execute_command                 = true
-  healthealth_check_grace_period_seconds = 86400 # 24H
+  name                              = "${local.project_name}-api-service"
+  cluster                           = aws_ecs_cluster.api-cluster.name
+  launch_type                       = "FARGATE"
+  desired_count                     = 1
+  task_definition                   = aws_ecs_task_definition.api-task-def.arn
+  enable_execute_command            = true
+  health_check_grace_period_seconds = 86400 # 24H
 
   network_configuration {
     subnets          = aws_subnet.public-subnet.*.id
