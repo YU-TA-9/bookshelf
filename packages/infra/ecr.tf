@@ -10,12 +10,11 @@ resource "aws_ecr_lifecycle_policy" "api-policy" {
     "rules": [
         {
             "rulePriority": 1,
-            "description": "Expire images older than 5 days",
+            "description": "Expire images more than 1 in untagged",
             "selection": {
                 "tagStatus": "untagged",
-                "countType": "sinceImagePushed",
-                "countUnit": "days",
-                "countNumber": 5
+                "countType": "imageCountMoreThan",
+                "countNumber": 1
             },
             "action": {
                 "type": "expire"
