@@ -38,7 +38,6 @@ export const globalStyle = css`
     font-size: ${fontSize.normal};
   }
 
-  ul,
   li {
     list-style: none;
     font-size: ${fontSize.normal};

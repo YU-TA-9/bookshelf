@@ -12,11 +12,13 @@ type Props = {
 const markdownAndHtmlArea = css`
   position: relative;
   width: 100%;
-  height: 400px;
+  max-height: 800px;
+  overflow: hidden;
+  overflow-y: scroll;
 `;
 
 const textFormWrap = (showHTML: boolean) => css`
-  height: 100%;
+  height: 400px;
   display: ${!showHTML ? 'block' : 'none'};
 `;
 

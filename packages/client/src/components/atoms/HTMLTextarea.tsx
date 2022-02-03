@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { markdownStyle } from '../../styles/markdown';
 import { convertMarkdownToHTML } from '../../utils/sanitize';
 
 type Props = {
@@ -14,7 +15,7 @@ const htmlTextarea = css`
 export const HTMLTextarea = ({ value }: Props) => {
   return (
     <div
-      css={htmlTextarea}
+      css={[htmlTextarea, markdownStyle]}
       dangerouslySetInnerHTML={convertMarkdownToHTML(value)}
     />
   );
