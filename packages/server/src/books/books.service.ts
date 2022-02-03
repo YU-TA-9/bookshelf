@@ -7,6 +7,7 @@ import { Repository } from 'typeorm';
 import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
 import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
+import { PatchBookStatusDto } from './dtos/patchBookStatusDto';
 
 @Injectable()
 export class BooksService {
@@ -107,6 +108,16 @@ export class BooksService {
     // TODO: findOneとどちらを使うか統一する
     const book = await this.booksRepository.findOneOrFail(id);
     book.memo = patchBookMemoDto.memo;
+    return await this.booksRepository.save(book);
+  }
+
+  async updateBookStatus(
+    id: number,
+    patchBookStatusDto: PatchBookStatusDto,
+  ): Promise<Book> {
+    // TODO: findOneとどちらを使うか統一する
+    const book = await this.booksRepository.findOneOrFail(id);
+    book.status = patchBookStatusDto.status;
     return await this.booksRepository.save(book);
   }
 }

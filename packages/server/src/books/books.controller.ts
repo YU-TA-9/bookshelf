@@ -16,6 +16,7 @@ import { Book } from './book.entity';
 import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
 import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
+import { PatchBookStatusDto } from './dtos/patchBookStatusDto';
 
 @Controller('books')
 export class BooksController {
@@ -65,5 +66,14 @@ export class BooksController {
     @Body() patchBookMemoDto: PatchBookMemoDto,
   ) {
     return this.booksService.updateBookMemo(id, patchBookMemoDto);
+  }
+
+  @Patch('/status/:id')
+  @HttpCode(HttpStatus.OK)
+  patchBookStatus(
+    @Param('id') id: number,
+    @Body() patchBookStatusDto: PatchBookStatusDto,
+  ) {
+    return this.booksService.updateBookStatus(id, patchBookStatusDto);
   }
 }

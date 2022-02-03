@@ -6,6 +6,7 @@ import { api } from '../../api/apiFactory';
 import { MainTemplate } from '../templates/MainTemplate';
 import { BookDetailCard } from '../organisms/BookDetailCard';
 import { Button } from '../atoms/Button';
+import { STATUS } from '../../api/mappings/status';
 
 const bookDetailWrap = css``;
 
@@ -13,22 +14,40 @@ type Params = {
   id: string;
 };
 
-export const BookDetail = (props) => {
+export const BookDetail = () => {
   const { id } = useParams<Params>();
   const [book, setBook] = React.useState<Book>();
 
+  const [selectedStatusValue, setSelectedStatusValue] = React.useState<number>(
+    STATUS.waiting,
+  );
   const [inputMarkdown, setInputMarkDown] = React.useState<string>('');
 
-  // TODO: １回のみ呼ばれるようにする
   React.useEffect(() => {
     (async () => {
       const { data } = await api.booksControllerGetBook(Number(id));
       setBook(data);
 
-      const initialMemo = data.memo || '';
-      setInputMarkDown(initialMemo);
+      setInputMarkDown(data.memo || '');
+      setSelectedStatusValue(data.status);
     })();
   }, []);
+
+  const handleStatusChange = async (
+    e: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    try {
+      // MEMO: e.target.valueの値はawait前後で変わる場合があるので変数に格納して使う
+      const selected = Number(e.target.value);
+      setSelectedStatusValue(selected);
+      const { data } = await api.booksControllerPatchBookStatus(book.id, {
+        status: selected,
+      });
+      window.alert('ステータスを更新しました');
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
   const handleMarkdownChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputMarkDown(e.target.value);
@@ -52,8 +71,10 @@ export const BookDetail = (props) => {
       <div css={bookDetailWrap}>
         <BookDetailCard
           book={book}
-          markdown={inputMarkdown}
-          onMarkdownChange={handleMarkdownChange}
+          selectedStatus={selectedStatusValue}
+          handleStatusChange={handleStatusChange}
+          inputMarkdown={inputMarkdown}
+          handleMarkdownChange={handleMarkdownChange}
         />
       </div>
       <Button label="更新" onClick={() => handleUpdateMemo()} width={180} />

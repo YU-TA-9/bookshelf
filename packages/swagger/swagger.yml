@@ -105,6 +105,24 @@ paths:
       responses:
         '200':
           description: ''
+  /api/books/status/{id}:
+    patch:
+      operationId: BooksController_patchBookStatus
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBookStatusDto'
+      responses:
+        '200':
+          description: ''
 info:
   title: Reading Management API
   description: API Docs
@@ -207,3 +225,11 @@ components:
           description: メモ
       required:
         - memo
+    PatchBookStatusDto:
+      type: object
+      properties:
+        status:
+          type: number
+          description: 読書状態
+      required:
+        - status

@@ -6,12 +6,9 @@ import { fontSize } from '../../styles/fontSize';
 import * as React from 'react';
 import { MarkdownAndHTMLArea } from '../molecules/MarkdownAndHTMLArea';
 import { Button } from '../atoms/Button';
-
-type Props = {
-  book: Book;
-  markdown: string;
-  onMarkdownChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
+import { SelectBox } from '../atoms/SelectBox';
+import { status, statusLabel } from '../../api/mappings/status';
+import { api } from '../../api/apiFactory';
 
 const table = css`
   text-align: center;
@@ -37,7 +34,21 @@ const markdownAreaWrap = css`
   margin-bottom: 16px;
 `;
 
-export const BookDetailCard = ({ book, markdown, onMarkdownChange }: Props) => {
+type Props = {
+  book: Book;
+  selectedStatus: status;
+  handleStatusChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
+  inputMarkdown: string;
+  handleMarkdownChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+};
+
+export const BookDetailCard = ({
+  book,
+  selectedStatus,
+  handleStatusChange,
+  inputMarkdown,
+  handleMarkdownChange,
+}: Props) => {
   const [showHTML, setShowHTML] = React.useState<boolean>(true);
 
   return (
@@ -49,7 +60,18 @@ export const BookDetailCard = ({ book, markdown, onMarkdownChange }: Props) => {
         <li css={bookTitle}>{book?.name}</li>
         <li>{book?.author}</li>
         <li>{book?.publisher}</li>
-        <li>{StatusLabel(book?.status)}</li>
+        <li>
+          <SelectBox
+            value={selectedStatus}
+            options={Object.keys(statusLabel).map((key, i) => {
+              return {
+                value: key,
+                label: statusLabel[key],
+              };
+            })}
+            onChange={handleStatusChange}
+          />
+        </li>
         <li>{dateText(book?.createdAt)}</li>
       </ul>
       <div>
@@ -63,8 +85,8 @@ export const BookDetailCard = ({ book, markdown, onMarkdownChange }: Props) => {
       </div>
       <div css={markdownAreaWrap}>
         <MarkdownAndHTMLArea
-          value={markdown}
-          onChange={onMarkdownChange}
+          value={inputMarkdown}
+          onChange={handleMarkdownChange}
           showHTML={showHTML}
         />
       </div>
