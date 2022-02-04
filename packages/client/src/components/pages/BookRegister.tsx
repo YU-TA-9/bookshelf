@@ -14,6 +14,7 @@ export const BookRegister = () => {
   const [open, setOpen] = React.useState<boolean>(false);
 
   React.useEffect(() => {
+    // バーコードから
     (async () => {
       if (!code) {
         return;
@@ -21,13 +22,11 @@ export const BookRegister = () => {
 
       try {
         const response = await api.booksControllerCreateBook({ isbn: code });
-        if (response.status !== 201) {
-          alert('Failed!!');
-        } else {
-          alert(`Success!\n${JSON.stringify(response.data)}`);
-        }
+        alert(`Success!\n${JSON.stringify(response.data)}`);
       } catch (e) {
         alert('Failed!!');
+      } finally {
+        setOpen(false);
       }
     })();
   }, [code]);
