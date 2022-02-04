@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { Book } from '../../api/generated';
-import { StatusLabel } from '../atoms/StatusLabel';
 import { dateText } from '../../utils/dateUtil';
 import { fontSize } from '../../styles/fontSize';
 import * as React from 'react';
@@ -8,8 +7,6 @@ import { MarkdownAndHTMLArea } from '../molecules/MarkdownAndHTMLArea';
 import { Button } from '../atoms/Button';
 import { SelectBox } from '../atoms/SelectBox';
 import { status, statusLabel } from '../../api/mappings/status';
-import { api } from '../../api/apiFactory';
-
 const table = css`
   text-align: center;
   & > li {
@@ -72,7 +69,7 @@ export const BookDetailCard = ({
             onChange={handleStatusChange}
           />
         </li>
-        <li>{dateText(book?.createdAt)}</li>
+        <li>{`登録日：${dateText(book?.createdAt)}`}</li>
       </ul>
       <div>
         <div css={buttonWrap}>
