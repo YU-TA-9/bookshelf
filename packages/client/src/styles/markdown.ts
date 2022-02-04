@@ -8,4 +8,20 @@ export const markdownStyle = css`
   li {
     list-style-type: inherit;
   }
+
+  table,
+  td,
+  th {
+    border-collapse: collapse;
+    border: 1px solid #e4e4e4;
+    padding: 8px;
+  }
+
+  table {
+    margin: 16px 16px;
+  }
+
+  th {
+    font-weight: bold;
+  }
 `;

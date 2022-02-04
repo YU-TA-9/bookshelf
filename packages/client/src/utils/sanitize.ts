@@ -30,6 +30,12 @@ export const convertMarkdownToHTML = (
       'del',
       'pre',
       'code',
+      'table',
+      'thead',
+      'tbody',
+      'th',
+      'tr',
+      'td',
     ],
   };
   const htmlText = DOMPurify.sanitize(markedText, config);
