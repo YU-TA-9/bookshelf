@@ -3,12 +3,23 @@ import { DefaultApiFactory } from './generated';
 
 const axiosInstance = axios.create();
 
+axiosInstance.defaults.withCredentials = true;
+
 axiosInstance.interceptors.response.use(
   (response) => {
     console.info(response);
     return response;
   },
-  (error) => {},
+  (error) => {
+    console.error(error);
+    if (error.response.status === 401) {
+      // Remove login flg
+      localStorage.clear();
+      window.location.reload();
+      console.error('API unauthorized');
+    }
+    return Promise.reject(error);
+  },
 );
-1;
+
 export const api = DefaultApiFactory(undefined, undefined, axiosInstance);
