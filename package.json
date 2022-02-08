@@ -14,7 +14,8 @@
   "scripts": {
     "prepare": "husky install",
     "cl": "yarn workspace client",
-    "sr": "yarn workspace server"
+    "sr": "yarn workspace server",
+    "swagger:local": "yarn sr swagger:generate && yarn cl openapi-generator:local"
   },
   "husky": {
     "hooks": {
