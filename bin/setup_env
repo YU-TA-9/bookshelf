@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 touch .env
-google_client=$(aws ssm get-parameter --name "/bookshelf/google-client-id" --query 'Parameter.Value' --output text)
+google_client=$(aws ssm get-parameter --name "/bookshelf/google-client-id" --with-decryption --query 'Parameter.Value' --output text)
 
 if test $google_client -eq $null ; then
   exit 1
