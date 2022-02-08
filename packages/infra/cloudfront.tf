@@ -27,14 +27,14 @@ resource "aws_cloudfront_distribution" "web-distribution" {
     cached_methods   = ["GET", "HEAD"]
     target_origin_id = "${local.project_name}-web-assets-s3"
 
-    forwarded_values {
-      query_string = false
-      headers      = ["Origin"]
+    # forwarded_values {
+    #   query_string = false
+    #   headers      = ["Origin"]
 
-      cookies {
-        forward = "none"
-      }
-    }
+    #   cookies {
+    #     forward = "none"
+    #   }
+    # }
 
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
