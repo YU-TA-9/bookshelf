@@ -1,11 +1,11 @@
 name: Deploy api source to prod
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
     paths:
       - "packages/server/**"
-# on: workflow_dispatch
 jobs:
   build-push-deploy-image:
     runs-on: ubuntu-latest
