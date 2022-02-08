@@ -1,3 +1,11 @@
+# data "aws_cloudfront_cache-policy" "managed-caching-optimized" {
+#   name = "Managed-CachingOptimized"
+# }
+
+data "aws_cloudfront_origin_request_policy" "managed-cors-s3-origin" {
+  name = "Managed-CORS-S3Origin"
+}
+
 resource "aws_cloudfront_distribution" "web-distribution" {
   origin {
     domain_name = aws_s3_bucket.web-assets.bucket_domain_name
@@ -33,6 +41,9 @@ resource "aws_cloudfront_distribution" "web-distribution" {
     default_ttl            = 3600
     max_ttl                = 86400
     compress               = true
+
+    # cache_policy_id        = data.aws_cloudfront_cache_policy.managed-caching-optimized.id
+    origin_request_policy_id = data.aws_cloudfront_origin_request_policy.managed-cors-s3-origin.id
   }
 
   # 日本が含まれる最低料金クラス
