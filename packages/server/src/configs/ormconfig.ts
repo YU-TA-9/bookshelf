@@ -15,8 +15,8 @@ export const ormconfig = () => ({
     connectTimeout: 30 * 1000,
     logging: true,
     cli: {
-      entitiesDir: './dist/**',
-      migrationsDir: './dist/**/migrations',
+      entitiesDir: './src/**',
+      migrationsDir: './src/migrations',
     },
   },
 });

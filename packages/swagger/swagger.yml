@@ -14,6 +14,39 @@ paths:
       responses:
         '200':
           description: ''
+  /api/login/google:
+    post:
+      operationId: AuthController_loginGoogle
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginGoogleDto'
+      responses:
+        '200':
+          description: ''
+  /api/register/google:
+    post:
+      operationId: AuthController_registerGoogle
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginGoogleDto'
+      responses:
+        '201':
+          description: ''
+  /api/logout:
+    post:
+      operationId: AuthController_logout
+      parameters: []
+      responses:
+        '200':
+          description: ''
   /api/books:
     get:
       operationId: BooksController_getBookList
@@ -139,6 +172,14 @@ servers:
         default: http://localhost:3000
 components:
   schemas:
+    LoginGoogleDto:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Googleトークン
+      required:
+        - token
     Book:
       type: object
       properties:

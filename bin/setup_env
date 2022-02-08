@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+touch .env
+google_client=$(aws ssm get-parameter --name "/bookshelf/google-client-id" --query 'Parameter.Value' --output text)
+
+if test $google_client -eq $null ; then
+  exit 1
+fi
+
+echo "GOOGLE_CLIENT_ID=${google_client}\n" >>.env
+
+echo Success!!
+exit 0

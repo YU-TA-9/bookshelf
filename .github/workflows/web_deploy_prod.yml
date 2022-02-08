@@ -20,6 +20,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
 
+      - name: Generate .env
+        run: bin/setup_env
+
       - name: Build image & Push assets to s3
         run: |
           DOCKER_BUILDKIT=1 docker build . -t web-prod-assets --target web-production --progress=tty

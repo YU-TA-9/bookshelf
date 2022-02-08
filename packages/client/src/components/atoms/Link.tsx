@@ -1,9 +1,12 @@
 import { css } from '@emotion/react';
+import { Link } from 'react-router-dom';
 import { fontSize } from '../../styles/fontSize';
 
 type Props = {
+  isReactRouter?: boolean;
   text: string;
-  href: string;
+  to: string;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 };
 
 const link = css`
@@ -13,9 +16,13 @@ const link = css`
   color: #094067;
 `;
 
-export const Link = ({ text, href }: Props) => {
-  return (
-    <a css={link} href={href}>
+export const LinkText = ({ isReactRouter, text, to, onClick }: Props) => {
+  return isReactRouter ? (
+    <Link css={link} to={to}>
+      {text}
+    </Link>
+  ) : (
+    <a css={link} href={to} onClick={onClick}>
       {text}
     </a>
   );
