@@ -15,6 +15,9 @@ WORKDIR ${APP_DIR}
 # rootのを使う
 COPY ./yarn.lock yarn.lock 
 
+# Github Actionsで生成
+COPY ./.env .env
+
 COPY ./packages/client .
 COPY ./packages/swagger/swagger.yml swagger.yml
 
