@@ -7,7 +7,7 @@ if test $google_client -eq $null ; then
   exit 1
 fi
 
-echo "GOOGLE_CLIENT_ID=${google_client}" >>.env
+echo -n "GOOGLE_CLIENT_ID=${google_client}" >>.env
 
 echo Success!!
 exit 0
