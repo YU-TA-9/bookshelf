@@ -8,6 +8,7 @@ type Props = {
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   showHTML: boolean;
 };
+const defaultHeight = '400px';
 
 const markdownAndHtmlArea = css`
   position: relative;
@@ -18,12 +19,13 @@ const markdownAndHtmlArea = css`
 `;
 
 const textFormWrap = (showHTML: boolean) => css`
-  height: 400px;
+  height: ${defaultHeight};
   display: ${!showHTML ? 'block' : 'none'};
 `;
 
 const htmlTextAreaWrap = (showHTML: boolean) => css`
   height: 100%;
+  min-height: ${defaultHeight};
   display: ${showHTML ? 'block' : 'none'};
 `;
 

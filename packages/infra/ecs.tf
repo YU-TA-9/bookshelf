@@ -61,6 +61,18 @@ resource "aws_ecs_task_definition" "api-task-def" {
       {
         "name": "RAKUTEN_API_ID",
         "valueFrom": "${aws_ssm_parameter.rakuten-api-id.arn}"
+      },
+      {
+        "name": "COOKIE_SECRET",
+        "valueFrom": "${aws_ssm_parameter.cookie-secret.arn}"
+      },
+      {
+        "name": "TOKEN_SECRET",
+        "valueFrom": "${aws_ssm_parameter.token-secret.arn}"
+      },
+      {
+        "name": "GOOGLE_CLIENT_ID",
+        "valueFrom": "${aws_ssm_parameter.google-client-id.arn}"
       }
     ]
   }
