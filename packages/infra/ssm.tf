@@ -44,9 +44,52 @@ resource "aws_ssm_parameter" "db-port" {
   value       = var.db_port
 }
 
+// TODO: RAKUTEN APPに変えたい
 resource "aws_ssm_parameter" "rakuten-api-id" {
   name        = "/${local.project_name}/rakuten-api-id"
   description = "Rakuten API ID"
+  type        = "SecureString"
+  value       = "dummy" # 後から cli で上書きする
+  overwrite   = true
+
+  lifecycle {
+    ignore_changes = [
+      value,
+    ]
+  }
+}
+
+resource "aws_ssm_parameter" "cookie-secret" {
+  name        = "/${local.project_name}/cookie-secret"
+  description = "Cookie secret key"
+  type        = "SecureString"
+  value       = "dummy" # 後から cli で上書きする
+  overwrite   = true
+
+  lifecycle {
+    ignore_changes = [
+      value,
+    ]
+  }
+}
+
+resource "aws_ssm_parameter" "token-secret" {
+  name        = "/${local.project_name}/token-secret"
+  description = "Token secret key"
+  type        = "SecureString"
+  value       = "dummy" # 後から cli で上書きする
+  overwrite   = true
+
+  lifecycle {
+    ignore_changes = [
+      value,
+    ]
+  }
+}
+
+resource "aws_ssm_parameter" "google-client-id" {
+  name        = "/${local.project_name}/google-client-id"
+  description = "Google client ID"
   type        = "SecureString"
   value       = "dummy" # 後から cli で上書きする
   overwrite   = true
