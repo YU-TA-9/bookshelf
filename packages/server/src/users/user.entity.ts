@@ -1,8 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Book } from 'src/books/book.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -36,6 +38,9 @@ export class User {
   @Column({ nullable: true, unique: true })
   @ApiProperty({ description: 'Google ID' })
   google_id: string;
+
+  @OneToMany((type) => Book, (book) => book.id)
+  books: Book[];
 
   @CreateDateColumn()
   @ApiProperty({ description: '追加日' })
