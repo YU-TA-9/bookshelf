@@ -46,7 +46,7 @@ resource "aws_ecs_task_definition" "api-task-def" {
         "name": "DOMAIN",
         "value": "${var.domain}"
       }
-    ]
+    ],
     "secrets": [
       {
         "name": "DB_HOST",
