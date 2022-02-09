@@ -73,6 +73,10 @@ resource "aws_ecs_task_definition" "api-task-def" {
       {
         "name": "GOOGLE_CLIENT_ID",
         "valueFrom": "${aws_ssm_parameter.google-client-id.arn}"
+      },
+      {
+        "name": "DOMAIN",
+        "valueFrom": "${var.domain}"
       }
     ]
   }
