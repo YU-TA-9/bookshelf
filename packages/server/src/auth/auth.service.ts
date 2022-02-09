@@ -14,6 +14,8 @@ import { User } from 'src/users/user.entity';
 import { LoginResponseDto } from './dtos/login-response.dto';
 
 const googleOAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+const domain =
+  process.env.NODE_ENV === 'production' ? `${process.env.DOMAIN}` : 'localhost';
 
 @Injectable()
 export class AuthService {
@@ -92,7 +94,7 @@ export class AuthService {
     });
     res.cookie('access_token', token, {
       httpOnly: true,
-      domain: 'localhost',
+      domain: domain,
       expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
     });
   }
