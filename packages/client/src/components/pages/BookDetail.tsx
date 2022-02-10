@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Book } from '../../api/generated';
 import { api } from '../../api/apiFactory';
 import { MainTemplate } from '../templates/MainTemplate';
@@ -17,6 +17,7 @@ type Params = {
 export const BookDetail = () => {
   const { id } = useParams<Params>();
   const [book, setBook] = React.useState<Book>();
+  const navigate = useNavigate();
 
   const [selectedStatusValue, setSelectedStatusValue] = React.useState<number>(
     STATUS.waiting,
@@ -62,6 +63,18 @@ export const BookDetail = () => {
     })();
   };
 
+  const handleDelete = async () => {
+    (async () => {
+      try {
+        if (confirm(`「${book.name}」を削除しますか？`)) {
+          const { data } = await api.booksControllerDeleteBook(Number(id));
+          alert('削除しました');
+          navigate('/');
+        }
+      } catch (e) {}
+    })();
+  };
+
   return (
     <MainTemplate title="書籍詳細">
       <div css={bookDetailWrap}>
@@ -74,6 +87,12 @@ export const BookDetail = () => {
         />
       </div>
       <Button label="更新" onClick={() => handleUpdateMemo()} width={180} />
+      <Button
+        label="削除"
+        background="sub"
+        onClick={() => handleDelete()}
+        width={180}
+      />
     </MainTemplate>
   );
 };
