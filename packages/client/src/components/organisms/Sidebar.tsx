@@ -27,9 +27,7 @@ export const Sidebar = () => {
       await api.authControllerLogout();
       localStorage.clear();
       window.location.reload();
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   };
 
   return (

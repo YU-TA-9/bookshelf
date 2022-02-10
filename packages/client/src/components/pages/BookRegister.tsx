@@ -43,9 +43,7 @@ export const BookRegister = () => {
       } else {
         alert(`Success!\n${JSON.stringify(response.data)}`);
       }
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   };
 
   const handleScannerModalButton = () => {

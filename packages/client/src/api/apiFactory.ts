@@ -7,7 +7,6 @@ axiosInstance.defaults.withCredentials = true;
 
 axiosInstance.interceptors.response.use(
   (response) => {
-    console.info(response);
     return response;
   },
   (error) => {

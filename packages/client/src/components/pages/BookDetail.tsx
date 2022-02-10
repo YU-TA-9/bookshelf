@@ -44,9 +44,7 @@ export const BookDetail = () => {
         status: selected,
       });
       window.alert('ステータスを更新しました');
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   };
 
   const handleMarkdownChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -60,9 +58,7 @@ export const BookDetail = () => {
           memo: inputMarkdown,
         });
         alert('メモが更新されました');
-      } catch (e) {
-        console.error(e);
-      }
+      } catch (e) {}
     })();
   };
 
