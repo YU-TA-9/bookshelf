@@ -1,15 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Book } from 'src/books/book.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 
+// passwordは除外
+export type CurrentUser = Omit<User, 'password'>;
+
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   @ApiProperty()
   readonly id: number;
 
@@ -36,6 +41,9 @@ export class User {
   @Column({ nullable: true, unique: true })
   @ApiProperty({ description: 'Google ID' })
   google_id: string;
+
+  @OneToMany((type) => Book, (book) => book.id)
+  books: Book[];
 
   @CreateDateColumn()
   @ApiProperty({ description: '追加日' })

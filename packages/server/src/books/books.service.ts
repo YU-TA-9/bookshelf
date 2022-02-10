@@ -8,6 +8,7 @@ import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
 import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
 import { PatchBookStatusDto } from './dtos/patchBookStatusDto';
+import { CurrentUser } from 'src/users/user.entity';
 
 @Injectable()
 export class BooksService {
@@ -17,12 +18,14 @@ export class BooksService {
     private httpService: HttpService,
   ) {}
 
-  async getBookList(): Promise<Book[]> {
-    return await this.booksRepository.find();
+  async getBookList(user: CurrentUser): Promise<Book[]> {
+    return await this.booksRepository.find({ where: { userId: user.id } });
   }
 
-  async getBook(id: number): Promise<Book> {
-    const book = await this.booksRepository.findOne(id);
+  async getBook(user: CurrentUser, id: number): Promise<Book> {
+    const book = await this.booksRepository.findOne(id, {
+      where: { userId: user.id },
+    });
     if (!book) {
       throw new HttpException(
         {
@@ -36,8 +39,11 @@ export class BooksService {
     return book;
   }
 
-  async createBookSelf(createBookSelfDto: CreateBookSelfDto): Promise<Book> {
-    const book = new Book();
+  async createBookSelf(
+    user: CurrentUser,
+    createBookSelfDto: CreateBookSelfDto,
+  ): Promise<Book> {
+    const book = new Book(user.id);
     const { name, author, publisher } = createBookSelfDto;
     book.name = name;
     book.author = author;
@@ -49,7 +55,10 @@ export class BooksService {
     return await this.booksRepository.save(book);
   }
 
-  createBook(createBookDto: CreateBookDto): Observable<Promise<Book>> {
+  createBook(
+    user: CurrentUser,
+    createBookDto: CreateBookDto,
+  ): Observable<Promise<Book>> {
     // TODO: RAKUTEN APPが正式なので直したい
     return this.httpService
       .get(
@@ -73,8 +82,7 @@ export class BooksService {
 
           const data = response.data.Items[0].Item;
 
-          const book = new Book();
-          book.isbn = data.isbn;
+          const book = new Book(user.id);
           book.name = data.title;
           book.author = data.author;
           book.publisher = data.publisherName;
@@ -88,35 +96,35 @@ export class BooksService {
       );
   }
 
-  async deleteBook(id: number): Promise<void> {
-    const result = await this.booksRepository.delete(id);
-    if (result.affected === 0) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: `Not found with ${id}`,
-        },
-        HttpStatus.NOT_FOUND,
-      );
-    }
+  async deleteBook(user: CurrentUser, id: number): Promise<void> {
+    const book = await this.booksRepository.findOne(id, {
+      where: { userId: user.id },
+    });
+    const result = await this.booksRepository.remove(book);
   }
 
   async updateBookMemo(
+    user: CurrentUser,
     id: number,
     patchBookMemoDto: PatchBookMemoDto,
   ): Promise<Book> {
     // TODO: findOneとどちらを使うか統一する
-    const book = await this.booksRepository.findOneOrFail(id);
+    const book = await this.booksRepository.findOneOrFail(id, {
+      where: { userId: user.id },
+    });
     book.memo = patchBookMemoDto.memo;
     return await this.booksRepository.save(book);
   }
 
   async updateBookStatus(
+    user: CurrentUser,
     id: number,
     patchBookStatusDto: PatchBookStatusDto,
   ): Promise<Book> {
     // TODO: findOneとどちらを使うか統一する
-    const book = await this.booksRepository.findOneOrFail(id);
+    const book = await this.booksRepository.findOneOrFail(id, {
+      where: { userId: user.id },
+    });
     book.status = patchBookStatusDto.status;
     return await this.booksRepository.save(book);
   }

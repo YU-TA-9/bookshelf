@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Provider, UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
@@ -10,8 +11,12 @@ import { LoginGoogleDto } from './dtos/login-google.dto';
 import { Response } from 'express';
 import { OAuth2Client, LoginTicket } from 'google-auth-library';
 import { CreateUserWithProviderDto } from 'src/users/dtos/create-user-with-provider.dto';
-import { User } from 'src/users/user.entity';
+import { CurrentUser, User } from 'src/users/user.entity';
 import { LoginResponseDto } from './dtos/login-response.dto';
+
+export interface jwtPayload {
+  id: number;
+}
 
 const googleOAuth2Client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 const domain =
@@ -24,6 +29,17 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
+
+  async validateUser(payload: jwtPayload): Promise<CurrentUser> {
+    const user = await this.usersService.findOne(payload.id);
+
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    const { password, ...result } = user;
+    return result;
+  }
 
   async loginGoogle(
     loginGoogleDto: LoginGoogleDto,
@@ -41,7 +57,7 @@ export class AuthService {
       throw new NotFoundException('User not found');
     }
 
-    const payload = { id: user.id };
+    const payload: jwtPayload = { id: user.id };
     await this.setToken(payload, res);
 
     return this.generateClientState(user);
@@ -67,7 +83,7 @@ export class AuthService {
       dto,
     );
 
-    const payload = { id: user.id };
+    const payload: jwtPayload = { id: user.id };
     await this.setToken(payload, res);
 
     return this.generateClientState(user);
@@ -87,7 +103,7 @@ export class AuthService {
     return ticket;
   }
 
-  private async setToken(payload: any, res: Response): Promise<void> {
+  private async setToken(payload: jwtPayload, res: Response): Promise<void> {
     // Token作成
     const token = this.jwtService.sign(payload, {
       secret: process.env.TOKEN_SECRET,

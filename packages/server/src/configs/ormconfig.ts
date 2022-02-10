@@ -1,3 +1,5 @@
+import CustomNamingStrategy from './CustomNamingStrategy';
+
 /**
  * MEMO: appとmigration時どちらからも共通の設定を参照できるようにするために用意
  */
@@ -18,6 +20,8 @@ export const ormconfig = () => ({
       entitiesDir: './src/**',
       migrationsDir: './src/migrations',
     },
+    namingStrategy: new CustomNamingStrategy(),
+    bigNumberStrings: false,
   },
 });
 
