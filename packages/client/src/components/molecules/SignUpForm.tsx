@@ -35,9 +35,7 @@ export const SignUpForm = ({ title }: Props) => {
       });
       localStorage.setItem('user_info', JSON.stringify(data));
       navigate('/');
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   };
 
   const handleFailureGoogle = async (response: any) => {
