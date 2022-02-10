@@ -1,13 +1,16 @@
 import { css } from '@emotion/react';
 
+type Background = 'main' | 'sub';
+
 type Props = {
   label: string;
   onClick: (...args: any[]) => void;
   width: number;
+  background?: Background;
 };
 
-const button = (width: number) => css`
-  background: #3da9fc;
+const button = (width: number, background: Background = 'main') => css`
+  background: ${background === 'sub' ? '#fc3d3d' : '#3da9fc'};
   border: 0;
   border-radius: 10px;
   width: ${width}px;
@@ -22,9 +25,9 @@ const button = (width: number) => css`
   }
 `;
 
-export const Button = ({ label, onClick, width }: Props) => {
+export const Button = ({ label, onClick, width, background }: Props) => {
   return (
-    <button css={button(width)} onClick={onClick}>
+    <button css={button(width, background)} onClick={onClick}>
       {label}
     </button>
   );
