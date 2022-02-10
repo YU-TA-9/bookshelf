@@ -21,6 +21,7 @@ export const ormconfig = () => ({
       migrationsDir: './src/migrations',
     },
     namingStrategy: new CustomNamingStrategy(),
+    bigNumberStrings: false,
   },
 });
 
