@@ -29,9 +29,16 @@ export const statusValues = Object.keys(Status)
 
 @Entity('books')
 export class Book {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   @ApiProperty()
   id: number;
+
+  @Column({ type: 'bigint', nullable: true })
+  userId: number;
+
+  @ManyToOne((type) => User, (user) => user.books, { nullable: false })
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 
   @Column({ unique: true, nullable: true })
   @ApiProperty({ description: 'ISBNコード' })
@@ -68,10 +75,6 @@ export class Book {
   @ApiProperty({ description: 'メモ' })
   memo: string;
 
-  @ManyToOne((type) => User, (user) => user.books, { nullable: false })
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
   @CreateDateColumn()
   @ApiProperty({ description: '追加日' })
   readonly createdAt?: Date;
@@ -79,4 +82,8 @@ export class Book {
   @UpdateDateColumn()
   @ApiProperty({ description: '更新日' })
   readonly updatedAt?: Date;
+
+  constructor(userId: number) {
+    this.userId = userId;
+  }
 }

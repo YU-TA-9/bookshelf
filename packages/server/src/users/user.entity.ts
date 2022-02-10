@@ -9,9 +9,12 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+// passwordは除外
+export type CurrentUser = Omit<User, 'password'>;
+
 @Entity('users')
 export class User {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: 'bigint' })
   @ApiProperty()
   readonly id: number;
 

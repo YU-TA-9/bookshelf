@@ -16,6 +16,10 @@ export class UsersService {
     private readonly usersRepository: Repository<User>,
   ) {}
 
+  async findOne(id: number): Promise<User> {
+    return this.usersRepository.findOne(id);
+  }
+
   async findOneWithProvider(
     provider: Provider,
     providerUserId: string,

@@ -8,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
@@ -18,7 +19,7 @@ import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
 import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
 import { PatchBookStatusDto } from './dtos/patchBookStatusDto';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { AuthenticatedRequest, JwtAuthGuard } from '../auth/jwt-auth.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('books')
@@ -28,15 +29,18 @@ export class BooksController {
   @Get()
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: Book, isArray: true })
-  getBookList(): Promise<Book[]> {
-    return this.booksService.getBookList();
+  getBookList(@Req() req: AuthenticatedRequest): Promise<Book[]> {
+    return this.booksService.getBookList(req.user);
   }
 
   @Get('/:id')
   @HttpCode(HttpStatus.OK)
   @ApiOkResponse({ type: Book })
-  getBook(@Param('id') id: number): Promise<Book> {
-    return this.booksService.getBook(id);
+  getBook(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: number,
+  ): Promise<Book> {
+    return this.booksService.getBook(req.user, id);
   }
 
   @Post('/self')
@@ -45,38 +49,44 @@ export class BooksController {
   })
   @ApiCreatedResponse({ type: Book })
   async createBookSelf(
+    @Req() req: AuthenticatedRequest,
     @Body() createBookSelfDto: CreateBookSelfDto,
   ): Promise<Book> {
-    return await this.booksService.createBookSelf(createBookSelfDto);
+    return await this.booksService.createBookSelf(req.user, createBookSelfDto);
   }
 
   @Post()
   @ApiCreatedResponse({ type: Book })
-  createBook(@Body() createBookDto: CreateBookDto): Observable<Promise<Book>> {
-    return this.booksService.createBook(createBookDto);
+  createBook(
+    @Req() req: AuthenticatedRequest,
+    @Body() createBookDto: CreateBookDto,
+  ): Observable<Promise<Book>> {
+    return this.booksService.createBook(req.user, createBookDto);
   }
 
   @Delete('/:id')
   @HttpCode(HttpStatus.OK)
-  deleteBook(@Param('id') id: number) {
-    return this.booksService.deleteBook(id);
+  deleteBook(@Req() req: AuthenticatedRequest, @Param('id') id: number) {
+    return this.booksService.deleteBook(req.user, id);
   }
 
   @Patch('/memo/:id')
   @HttpCode(HttpStatus.OK)
   patchBookMemo(
+    @Req() req: AuthenticatedRequest,
     @Param('id') id: number,
     @Body() patchBookMemoDto: PatchBookMemoDto,
   ) {
-    return this.booksService.updateBookMemo(id, patchBookMemoDto);
+    return this.booksService.updateBookMemo(req.user, id, patchBookMemoDto);
   }
 
   @Patch('/status/:id')
   @HttpCode(HttpStatus.OK)
   patchBookStatus(
+    @Req() req: AuthenticatedRequest,
     @Param('id') id: number,
     @Body() patchBookStatusDto: PatchBookStatusDto,
   ) {
-    return this.booksService.updateBookStatus(id, patchBookStatusDto);
+    return this.booksService.updateBookStatus(req.user, id, patchBookStatusDto);
   }
 }
