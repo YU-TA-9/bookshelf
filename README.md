@@ -5,6 +5,8 @@
 ## Common
 
 - node.js v16.13.1
+- yarn v1.22.17
+  - May not launch with 2.x because not have `prepare` in lifecycle.
 
 ### Recommend
 
