@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
 if [ -z $(git diff --staged --name-only | grep '^packages/server/') ]; then
