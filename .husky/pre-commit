@@ -1,4 +1,8 @@
-#!/bin/sh
+#!/bin/bash
 . "$(dirname "$0")/_/husky.sh"
+
+if [ -z $(git diff --staged --name-only | grep '^packages/server/') ]; then
+  exit 0
+fi
 
 yarn sr swagger:check
