@@ -45,6 +45,7 @@ export class BooksService {
   ): Promise<Book> {
     const book = new Book(user.id);
     const { name, author, publisher } = createBookSelfDto;
+    // TODO: WEBから使うようになったらISBNコードの保持を必須にするか検討する
     book.name = name;
     book.author = author;
     book.publisher = publisher;
@@ -83,6 +84,7 @@ export class BooksService {
           const data = response.data.Items[0].Item;
 
           const book = new Book(user.id);
+          book.isbn = createBookDto.isbn;
           book.name = data.title;
           book.author = data.author;
           book.publisher = data.publisherName;
