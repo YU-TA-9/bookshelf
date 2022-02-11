@@ -17,11 +17,6 @@
     "sr": "yarn workspace server",
     "swagger:local": "yarn sr swagger:generate && yarn cl openapi-generator:local"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn sr swagger:check"
-    }
-  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.8.0",
     "@typescript-eslint/parser": "^5.8.0",
