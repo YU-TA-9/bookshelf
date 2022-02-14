@@ -41,7 +41,6 @@ jobs:
           DB_USER_NAME: root
           DB_PASSWORD: password
         run: |
-          yarn sr migration:run:prod
           yarn install
 
       - name: Test
