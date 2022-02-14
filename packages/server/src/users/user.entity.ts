@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Book } from 'src/books/book.entity';
+import { Book } from '../books/book.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude } from 'class-transformer';
 
 // passwordは除外
 export type CurrentUser = Omit<User, 'password'>;
@@ -30,6 +31,7 @@ export class User {
   @ApiProperty({ description: 'Eメール' })
   email: string;
 
+  @Exclude()
   @Column({ nullable: true })
   @ApiProperty({ description: 'パスワード' })
   password: string;
@@ -45,6 +47,7 @@ export class User {
   @OneToMany((type) => Book, (book) => book.id)
   books: Book[];
 
+  @Exclude()
   @CreateDateColumn()
   @ApiProperty({ description: '追加日' })
   readonly createdAt?: Date;

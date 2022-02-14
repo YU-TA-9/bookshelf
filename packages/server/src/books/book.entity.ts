@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/users/user.entity';
+import { User } from '../users/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Exclude, Type } from 'class-transformer';
 
 export const CATEGORY_UNSET = 0;
 
@@ -33,9 +34,11 @@ export class Book {
   @ApiProperty()
   id: number;
 
+  @Exclude()
   @Column({ type: 'bigint', nullable: true })
   userId: number;
 
+  @Exclude()
   @ManyToOne((type) => User, (user) => user.books, { nullable: false })
   @JoinColumn({ name: 'user_id' })
   user: User;
@@ -83,7 +86,9 @@ export class Book {
   @ApiProperty({ description: '更新日' })
   readonly updatedAt?: Date;
 
-  constructor(userId: number) {
-    this.userId = userId;
+  constructor(userId?: number) {
+    if (userId) {
+      this.userId = userId;
+    }
   }
 }

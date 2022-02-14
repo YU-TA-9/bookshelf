@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
@@ -10,6 +11,7 @@ import {
   Post,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiOkResponse } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
@@ -21,6 +23,7 @@ import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
 import { PatchBookStatusDto } from './dtos/patchBookStatusDto';
 import { AuthenticatedRequest, JwtAuthGuard } from '../auth/jwt-auth.guard';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @UseGuards(JwtAuthGuard)
 @Controller('books')
 export class BooksController {
