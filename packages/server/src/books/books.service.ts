@@ -8,7 +8,7 @@ import { CreateBookDto } from './dtos/createBookDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
 import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
 import { PatchBookStatusDto } from './dtos/patchBookStatusDto';
-import { CurrentUser } from 'src/users/user.entity';
+import { CurrentUser } from '../users/user.entity';
 
 @Injectable()
 export class BooksService {

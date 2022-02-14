@@ -10,8 +10,8 @@ import { JwtService } from '@nestjs/jwt';
 import { LoginGoogleDto } from './dtos/login-google.dto';
 import { Response } from 'express';
 import { OAuth2Client, LoginTicket } from 'google-auth-library';
-import { CreateUserWithProviderDto } from 'src/users/dtos/create-user-with-provider.dto';
-import { CurrentUser, User } from 'src/users/user.entity';
+import { CreateUserWithProviderDto } from '../users/dtos/create-user-with-provider.dto';
+import { CurrentUser, User } from '../users/user.entity';
 import { LoginResponseDto } from './dtos/login-response.dto';
 
 export interface jwtPayload {

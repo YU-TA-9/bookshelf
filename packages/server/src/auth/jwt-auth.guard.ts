@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { CurrentUser } from 'src/users/user.entity';
+import { CurrentUser } from '../users/user.entity';
 
 export interface AuthenticatedRequest extends Request {
   user: CurrentUser;
