@@ -9,7 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Exclude, Type } from 'class-transformer';
+import { Exclude } from 'class-transformer';
 
 export const CATEGORY_UNSET = 0;
 

@@ -10,18 +10,21 @@ export const ormconfig = () => ({
     port: Number(process.env.DB_PORT),
     username: process.env.DB_USER_NAME,
     password: process.env.DB_PASSWORD,
-    database: 'bookshelf',
+    database: process.env.NODE_ENV === 'test' ? 'bookshelf_test' : 'bookshelf',
     entities: ['./dist/**/*.entity{.ts,.js}'],
     migrations: ['./dist/**/migrations/*{.ts,.js}'],
+    seeds: ['./src/spec/seeds/**/*{.ts,.js}'],
+    factories: ['./src/spec/factories/**/*{.ts,.js}'],
     synchronize: false,
     connectTimeout: 30 * 1000,
-    logging: true,
+    logging: process.env.NODE_ENV === 'development',
     cli: {
       entitiesDir: './src/**',
       migrationsDir: './src/migrations',
     },
     namingStrategy: new CustomNamingStrategy(),
     bigNumberStrings: false,
+    autoLoadEntities: process.env.NODE_ENV === 'test',
   },
 });
 
