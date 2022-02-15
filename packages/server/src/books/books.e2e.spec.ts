@@ -17,10 +17,14 @@ import faker from '@faker-js/faker';
 import { AppModule } from '../app.module';
 import { PatchBookStatusDto } from './dtos/patchBookStatusDto';
 import { CreateBookSelfDto } from './dtos/createBookSelfDto';
+import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
+import { of } from 'rxjs';
+import { HttpService } from '@nestjs/axios';
 
 describe('Books', () => {
   let app: INestApplication;
   let booksRepository: Repository<Book>;
+  let httpService: HttpService;
 
   beforeAll(async () => {
     const modules = Reflect.getMetadata('imports', AppModule);
@@ -36,6 +40,7 @@ describe('Books', () => {
     await app.init();
 
     booksRepository = getRepository(Book);
+    httpService = moduleRef.get<HttpService>(HttpService);
   });
 
   beforeEach(async () => {
@@ -86,7 +91,24 @@ describe('Books', () => {
       isbn: '9784798150727',
     };
 
-    // TODO: 楽天APIもモックする
+    // 楽天APIをモック化
+    jest.spyOn(httpService, 'get').mockImplementation(() =>
+      of({
+        data: {
+          Items: [
+            {
+              Item: {
+                title: faker.name.title(),
+                author: faker.name.firstName() + faker.name.lastName(),
+                publisherName: faker.company.companyName(),
+                image_path: faker.image.abstract(),
+              },
+            },
+          ],
+          count: 1,
+        },
+      } as AxiosResponse),
+    );
     const res = await request(app.getHttpServer()).post('/books').send(body);
 
     const bookAndCount = await booksRepository.findAndCount({
