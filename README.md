@@ -85,3 +85,7 @@ $ yarn sr swagger:check
 - AWS
 - Terraform
 - Terraform Cloud
+
+### Diagram
+
+![Diagram](docs/infra.png)
