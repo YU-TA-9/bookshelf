@@ -47,6 +47,17 @@ paths:
       responses:
         '200':
           description: ''
+  /api/user:
+    get:
+      operationId: UsersController_getUser
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
   /api/books:
     get:
       operationId: BooksController_getBookList
@@ -180,6 +191,26 @@ components:
           description: Googleトークン
       required:
         - token
+    User:
+      type: object
+      properties:
+        lastName:
+          type: string
+          description: 姓
+        firstName:
+          type: string
+          description: 名
+        email:
+          type: string
+          description: Eメール
+        iconUrl:
+          type: string
+          description: アイコンURL
+      required:
+        - lastName
+        - firstName
+        - email
+        - iconUrl
     Book:
       type: object
       properties:

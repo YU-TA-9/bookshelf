@@ -10,7 +10,7 @@ const headerText = css`
   font-style: normal;
   font-weight: normal;
   font-size: ${fontSize.header};
-  color: #ffffff;
+  color: #fffffe;
 `;
 
 export const HeaderText = ({ text }: Props) => {

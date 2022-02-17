@@ -7,6 +7,7 @@ import { MarkdownAndHTMLArea } from '../molecules/MarkdownAndHTMLArea';
 import { Button } from '../atoms/Button';
 import { SelectBox } from '../atoms/SelectBox';
 import { status, statusLabel } from '../../api/mappings/status';
+
 const table = css`
   text-align: center;
   & > li {

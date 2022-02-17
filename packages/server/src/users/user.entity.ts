@@ -15,8 +15,8 @@ export type CurrentUser = Omit<User, 'password'>;
 
 @Entity('users')
 export class User {
+  @Exclude()
   @PrimaryGeneratedColumn({ type: 'bigint' })
-  @ApiProperty()
   readonly id: number;
 
   @Column()
@@ -33,26 +33,25 @@ export class User {
 
   @Exclude()
   @Column({ nullable: true })
-  @ApiProperty({ description: 'パスワード' })
   password: string;
 
   @Column({ nullable: true })
   @ApiProperty({ description: 'アイコンURL' })
   iconUrl: string;
 
+  @Exclude()
   @Column({ nullable: true, unique: true })
-  @ApiProperty({ description: 'Google ID' })
   google_id: string;
 
+  @Exclude()
   @OneToMany((type) => Book, (book) => book.id)
   books: Book[];
 
   @Exclude()
   @CreateDateColumn()
-  @ApiProperty({ description: '追加日' })
   readonly createdAt?: Date;
 
+  @Exclude()
   @UpdateDateColumn()
-  @ApiProperty({ description: '更新日' })
   readonly updatedAt?: Date;
 }

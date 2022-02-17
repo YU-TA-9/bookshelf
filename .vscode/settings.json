@@ -18,6 +18,7 @@
   "eslint.workingDirectories": [
     { "mode": "auto" }
   ],
+  "typescript.preferences.importModuleSpecifier": "relative",
   "yaml.customTags": [
     "!Equals sequence",
     "!FindInMap sequence",

@@ -29,6 +29,10 @@ export const globalStyle = css`
     background-size: auto;
   }
 
+  a {
+    text-decoration: none;
+  }
+
   h1 {
     font-size: ${fontSize.large};
   }
