@@ -35,7 +35,7 @@ $ yarn cl dev
 
 - Nest.js v8.0.0
 - TypeORM
-- Sqlite (may use MysQL in the future...)
+- MysQL 8.x
 
 ### Setup
 
@@ -85,3 +85,7 @@ $ yarn sr swagger:check
 - AWS
 - Terraform
 - Terraform Cloud
+
+### Diagram
+
+![Diagram](docs/infra.png)
