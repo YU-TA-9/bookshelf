@@ -1,4 +1,4 @@
-# [WIP]Bookshelf
+# Bookshelf
 
 読書管理 WEB アプリの monorepo
 
