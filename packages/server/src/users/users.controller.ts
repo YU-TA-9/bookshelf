@@ -9,7 +9,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiOkResponse } from '@nestjs/swagger';
-import { AuthenticatedRequest, JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AuthenticatedRequest, JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { User } from './user.entity';
 import { UsersService } from './users.service';
 
