@@ -39,6 +39,7 @@
     "dotenv-webpack": "^7.1.0",
     "marked": "^4.0.8",
     "react": "^17.0.2",
+    "react-colorful": "^5.5.1",
     "react-dom": "^17.0.2",
     "react-google-login": "^5.2.2",
     "react-qr-barcode-scanner": "^1.0.6",
