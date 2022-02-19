@@ -5,15 +5,23 @@ type Background = 'main' | 'sub';
 type Props = {
   label: string;
   onClick: (...args: any[]) => void;
-  width: number;
+  width?: number;
   background?: Background;
+  fullWidth?: boolean;
+  inline?: boolean;
 };
 
-const button = (width: number, background: Background = 'main') => css`
+const button = (
+  width?: number,
+  background: Background = 'main',
+  fullWidth?: boolean,
+  inline?: boolean,
+) => css`
+  ${inline && 'display: inline-block;'}
   background: ${background === 'sub' ? '#fc3d3d' : '#3da9fc'};
   border: 0;
   border-radius: 10px;
-  width: ${width}px;
+  ${fullWidth ? 'width: 100%;' : width && `width: ${width}px;`}
   padding: 4px 12px;
   font-size: 16px;
   text-align: center;
@@ -25,9 +33,19 @@ const button = (width: number, background: Background = 'main') => css`
   }
 `;
 
-export const Button = ({ label, onClick, width, background }: Props) => {
+export const Button = ({
+  label,
+  onClick,
+  width,
+  background,
+  fullWidth,
+  inline,
+}: Props) => {
   return (
-    <button css={button(width, background)} onClick={onClick}>
+    <button
+      css={button(width, background, fullWidth, inline)}
+      onClick={onClick}
+    >
       {label}
     </button>
   );

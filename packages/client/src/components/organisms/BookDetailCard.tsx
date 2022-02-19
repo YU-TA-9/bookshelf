@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Book } from '../../api/generated';
+import { Book, Category } from '../../api/generated';
 import { dateText } from '../../utils/dateUtil';
 import { fontSize } from '../../styles/fontSize';
 import * as React from 'react';
@@ -7,6 +7,9 @@ import { MarkdownAndHTMLArea } from '../molecules/MarkdownAndHTMLArea';
 import { Button } from '../atoms/Button';
 import { SelectBox } from '../atoms/SelectBox';
 import { status, statusLabel } from '../../api/mappings/status';
+import { Popup } from '../atoms/Popup';
+import { api } from '../../api/apiFactory';
+import { CategoryMenuElement } from '../atoms/CategoryMenuElement';
 
 const table = css`
   text-align: center;
@@ -17,11 +20,21 @@ const table = css`
 
 const image = css`
   height: 320px;
+  box-shadow: 0 0 8px gray;
 `;
 
 const bookTitle = css`
   font-size: ${fontSize.large};
   font-weight: 700;
+`;
+
+const category = css`
+  display: inline-block;
+  cursor: pointer;
+
+  &:hover {
+    background: #e4e4e4;
+  }
 `;
 
 const buttonWrap = css`
@@ -48,6 +61,23 @@ export const BookDetailCard = ({
   handleMarkdownChange,
 }: Props) => {
   const [showHTML, setShowHTML] = React.useState<boolean>(true);
+  const [showCategory, setShowCategory] = React.useState<boolean>(false);
+  const [categories, setCategories] = React.useState<Category[]>([]);
+
+  const handleShowCategory = async () => {
+    setShowCategory(true);
+    if (!categories.length) {
+      const { data } = await api.categoriesControllerGetCategories();
+      setCategories(data);
+    }
+  };
+
+  const handleChangeCategory = async (id: number) => {
+    const { data } = await api.booksControllerPatchBookCategory(book.id, {
+      category: id,
+    });
+    alert('カテゴリーを更新しました');
+  };
 
   return (
     <>
@@ -56,6 +86,31 @@ export const BookDetailCard = ({
           <img css={image} src={book?.image_path} />
         </li>
         <li css={bookTitle}>{book?.name}</li>
+        <li>
+          <div css={category} onClick={handleShowCategory}>
+            {book?.category || '未設定'}
+          </div>
+          {showCategory && (
+            <Popup
+              position="absolute"
+              width={180}
+              top={0}
+              left="50%"
+              handleHide={() => {
+                setShowCategory(false);
+              }}
+            >
+              {categories.map((e, i) => (
+                <CategoryMenuElement
+                  key={i}
+                  onClick={() => handleChangeCategory(e.id)}
+                  label={e.name}
+                  color={e.color}
+                />
+              ))}
+            </Popup>
+          )}
+        </li>
         <li>{book?.author}</li>
         <li>{book?.publisher}</li>
         <li>
