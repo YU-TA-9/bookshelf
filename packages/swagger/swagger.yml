@@ -149,6 +149,10 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
   /api/books/status/{id}:
     patch:
       operationId: BooksController_patchBookStatus
@@ -167,6 +171,32 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /api/books/category/{id}:
+    patch:
+      operationId: BooksController_patchBookCategory
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBookCategoryDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
   /api/categories:
     get:
       operationId: CategoriesController_getCategories
@@ -198,7 +228,7 @@ paths:
                 $ref: '#/components/schemas/Category'
   /api/categories/{id}:
     patch:
-      operationId: CategoriesController_patchCategoryStatus
+      operationId: CategoriesController_patchCategory
       parameters:
         - name: id
           required: true
@@ -214,6 +244,10 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
     delete:
       operationId: CategoriesController_deleteCategory
       parameters:
@@ -363,6 +397,14 @@ components:
           description: 読書状態
       required:
         - status
+    PatchBookCategoryDto:
+      type: object
+      properties:
+        category:
+          type: number
+          description: カテゴリー
+      required:
+        - category
     Category:
       type: object
       properties:

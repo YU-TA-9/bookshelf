@@ -9,6 +9,7 @@ import { CreateBookSelfDto } from './dtos/createBookSelfDto';
 import { PatchBookMemoDto } from './dtos/patchBookMemoDto';
 import { PatchBookStatusDto } from './dtos/patchBookStatusDto';
 import { CurrentUser } from '../users/user.entity';
+import { PatchBookCategoryDto } from './dtos/patch-book-category';
 
 @Injectable()
 export class BooksService {
@@ -128,6 +129,19 @@ export class BooksService {
       where: { userId: user.id },
     });
     book.status = patchBookStatusDto.status;
+    return await this.booksRepository.save(book);
+  }
+
+  async updateBookCategory(
+    user: CurrentUser,
+    id: number,
+    patchBookCategoryDto: PatchBookCategoryDto,
+  ): Promise<Book> {
+    // TODO: findOneとどちらを使うか統一する
+    const book = await this.booksRepository.findOneOrFail(id, {
+      where: { userId: user.id },
+    });
+    book.category = patchBookCategoryDto.category;
     return await this.booksRepository.save(book);
   }
 }

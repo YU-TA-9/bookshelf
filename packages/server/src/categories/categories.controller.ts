@@ -44,11 +44,12 @@ export class CategoriesController {
 
   @Patch('/:id')
   @HttpCode(HttpStatus.OK)
-  patchCategoryStatus(
+  @ApiOkResponse({ type: Category })
+  patchCategory(
     @Req() req: AuthenticatedRequest,
     @Param('id') id: number,
     @Body() patchCategoryDto: PatchCategoryDto,
-  ) {
+  ): Promise<Category> {
     return this.categoriesService.updateCategory(
       req.user,
       id,
@@ -58,7 +59,10 @@ export class CategoriesController {
 
   @Delete('/:id')
   @HttpCode(HttpStatus.OK)
-  deleteCategory(@Req() req: AuthenticatedRequest, @Param('id') id: number) {
+  deleteCategory(
+    @Req() req: AuthenticatedRequest,
+    @Param('id') id: number,
+  ): Promise<void> {
     return this.categoriesService.deleteBook(req.user, id);
   }
 }
