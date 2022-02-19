@@ -44,8 +44,8 @@ FROM node:16-buster-slim AS api-base
 ENV APP_DIR /app
 WORKDIR ${APP_DIR}
 
-# COPY package.json ${APP_DIR}/package.json
-# COPY yarn.lock ${APP_DIR}/yarn.lock
+# rootのを使う
+COPY ./yarn.lock yarn.lock 
 
 COPY ./packages/server .
 
