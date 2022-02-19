@@ -3,7 +3,7 @@ import { fontSize } from '../../styles/fontSize';
 
 type Props = {
   value: string | number;
-  onChange: (...args: any) => void;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>, ...args: any) => void;
 };
 
 const textForm = css`

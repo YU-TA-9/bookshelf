@@ -31,7 +31,6 @@ export const BookList = ({ books }: Props) => {
         books.map((book) => (
           <div css={item} key={book.id}>
             <BookCard
-              title={book.name}
               imageSrc={book.image_path}
               onClick={() => {
                 handleDetailButton(book.id);

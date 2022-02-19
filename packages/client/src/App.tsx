@@ -11,6 +11,7 @@ import { SignUp } from './components/pages/SignUp';
 import { BookshelfRecoilRoot } from './logics/RecoilRoot';
 import { RecoilRoot } from 'recoil';
 import { Profile } from './components/pages/Profile';
+import { BookCategory } from './components/pages/BookCategory';
 
 export const App = () => {
   return (
@@ -26,6 +27,7 @@ export const App = () => {
                 <Route path="/" element={<Top />}></Route>
                 <Route path="/:id" element={<BookDetail />}></Route>
                 <Route path="/register" element={<BookRegister />}></Route>
+                <Route path="/category" element={<BookCategory />}></Route>
                 <Route path="/user/profile" element={<Profile />}></Route>
               </Route>
             </Route>

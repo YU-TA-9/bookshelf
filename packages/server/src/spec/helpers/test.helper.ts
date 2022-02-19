@@ -16,3 +16,11 @@ export const loginAs = (user: User): void => {
 export const serialize = (object: any): string => {
   return JSON.stringify(instanceToPlain(object));
 };
+
+export const getRandomColorCode = (): string => {
+  let randomColorCode = '';
+  for (let i = 0; i < 6; i++) {
+    randomColorCode += '0123456789abcdef'[(16 * Math.random()) | 0];
+  }
+  return randomColorCode;
+};

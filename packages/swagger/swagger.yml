@@ -149,6 +149,10 @@ paths:
       responses:
         '200':
           description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
   /api/books/status/{id}:
     patch:
       operationId: BooksController_patchBookStatus
@@ -164,6 +168,94 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/PatchBookStatusDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /api/books/category/{id}:
+    patch:
+      operationId: BooksController_patchBookCategory
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchBookCategoryDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+  /api/categories:
+    get:
+      operationId: CategoriesController_getCategories
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+    post:
+      operationId: CategoriesController_createCategory
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+  /api/categories/{id}:
+    patch:
+      operationId: CategoriesController_patchCategory
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchCategoryDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+    delete:
+      operationId: CategoriesController_deleteCategory
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: number
       responses:
         '200':
           description: ''
@@ -305,3 +397,50 @@ components:
           description: 読書状態
       required:
         - status
+    PatchBookCategoryDto:
+      type: object
+      properties:
+        category:
+          type: number
+          description: カテゴリー
+      required:
+        - category
+    Category:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          description: カテゴリ名
+        color:
+          type: string
+          description: カラーコード
+      required:
+        - id
+        - name
+        - color
+    CreateCategoryDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: カテゴリー名
+        color:
+          type: string
+          description: カラーコード
+      required:
+        - name
+        - color
+    PatchCategoryDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: カテゴリー名
+        color:
+          type: string
+          description: カラーコード
+      required:
+        - name
+        - color

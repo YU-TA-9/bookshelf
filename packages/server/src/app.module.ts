@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { BooksModule } from './books/books.module';
+import { CategoriesModule } from './categories/categories.module';
 import { ormconfig } from './configs/ormconfig';
 import { HealthzModule } from './healthz/healthz.module';
 
@@ -28,6 +29,7 @@ import { HealthzModule } from './healthz/healthz.module';
     HealthzModule,
     AuthModule,
     BooksModule,
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

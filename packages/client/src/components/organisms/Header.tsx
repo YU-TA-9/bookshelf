@@ -6,7 +6,6 @@ import * as sampleLogo from '../../assets/title_logo_example.png';
 import { userState } from '../../states/atoms/user';
 import * as React from 'react';
 import { UserMenu } from '../molecules/UserMenu';
-import { Overlay } from '../../logics/Overlay';
 
 const header = css`
   display: flex;
@@ -62,7 +61,6 @@ const icon = css`
 `;
 
 const userMenu = css`
-  z-index: 10001;
   position: absolute;
   top: 100px;
   right: 38px;
@@ -104,11 +102,7 @@ export const Header = () => {
           ></img>
         </div>
         {showUserMenu && (
-          <Overlay handleHide={handleHideMenu}>
-            <div css={userMenu}>
-              <UserMenu />
-            </div>
-          </Overlay>
+          <UserMenu top={100} right={38} handleHide={handleHideMenu} />
         )}
       </div>
     </div>

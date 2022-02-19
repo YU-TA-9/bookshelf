@@ -20,6 +20,8 @@ import { CreateBookSelfDto } from './dtos/createBookSelfDto';
 import { AxiosResponse } from '@nestjs/terminus/dist/health-indicator/http/axios.interfaces';
 import { of } from 'rxjs';
 import { HttpService } from '@nestjs/axios';
+import { Category } from '../categories/category.entity';
+import { PatchBookCategoryDto } from './dtos/patch-book-category';
 
 describe('Books', () => {
   let app: INestApplication;
@@ -194,6 +196,30 @@ describe('Books', () => {
     });
 
     expect(bookFromRecord.status).toEqual(status);
+    expect(res.status).toEqual(HttpStatus.OK);
+    expect(res.body).toEqual(JSON.parse(serialize(bookFromRecord)));
+  });
+
+  it('PATCH /api/books/category', async () => {
+    const user = await factory(User)().create();
+    const book = await factory(Book)().create({ user: user });
+    const category = await factory(Category)().create({ user: user });
+
+    loginAs(user);
+
+    const body: PatchBookCategoryDto = {
+      category: category.id,
+    };
+
+    const res = await request(app.getHttpServer())
+      .patch(`/books/category/${book.id}`)
+      .send(body);
+
+    const bookFromRecord = await booksRepository.findOne({
+      where: { userId: user.id },
+    });
+
+    expect(bookFromRecord.category).toEqual(category.id);
     expect(res.status).toEqual(HttpStatus.OK);
     expect(res.body).toEqual(JSON.parse(serialize(bookFromRecord)));
   });

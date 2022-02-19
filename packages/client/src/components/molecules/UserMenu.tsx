@@ -1,29 +1,32 @@
 import { css } from '@emotion/react';
+import { Popup } from '../atoms/Popup';
 import { UserMenuElement } from '../atoms/UserMenuElement';
 
-type Props = {};
+type Props = {
+  top: number;
+  right: number;
+  handleHide: () => void;
+};
 
 type Menu = {
   to: string;
   label: string;
 };
 
-const userMenu = css`
-  width: 180px;
-  background: #d8eefe;
-  box-shadow: 0 0 8px gray;
-  border-radius: 10px;
-  padding: 8px 0;
-`;
-
 const menus: Menu[] = [{ to: '/user/profile', label: 'プロフィール' }];
 
-export const UserMenu = ({}: Props) => {
+export const UserMenu = ({ top, right, handleHide }: Props) => {
   return (
-    <div css={userMenu}>
+    <Popup
+      position="fixed"
+      width={180}
+      top={top}
+      right={right}
+      handleHide={handleHide}
+    >
       {menus.map((e, i) => (
         <UserMenuElement key={i} to={e.to} label={e.label} />
       ))}
-    </div>
+    </Popup>
   );
 };
