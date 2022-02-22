@@ -6,8 +6,10 @@ import { ModalPortal } from '../../logics/ModalPortal';
 import { Scanner } from '../atoms/Scanner';
 import { TextForm } from '../atoms/TextForm';
 import { MainTemplate } from '../templates/MainTemplate';
+import { useNotificationBar } from '../../logics/UseNotificationBar';
 
 export const BookRegister = () => {
+  const { notify } = useNotificationBar();
   const [isbn, setIsbn] = React.useState<string>('');
   const [code, setCode] = React.useState<string>('');
 
@@ -22,9 +24,7 @@ export const BookRegister = () => {
 
       try {
         const response = await api.booksControllerCreateBook({ isbn: code });
-        alert(`Success!\n${JSON.stringify(response.data)}`);
-      } catch (e) {
-        alert('Failed!!');
+        notify(`「${response.data.name}」を登録しました`);
       } finally {
         setOpen(false);
       }
@@ -36,14 +36,12 @@ export const BookRegister = () => {
   };
 
   const handleRegister = async () => {
-    try {
-      const response = await api.booksControllerCreateBook({ isbn: isbn });
-      if (response.status !== 201) {
-        alert('Failed!!');
-      } else {
-        alert(`Success!\n${JSON.stringify(response.data)}`);
-      }
-    } catch (e) {}
+    const response = await api.booksControllerCreateBook({ isbn: isbn });
+    if (response.status !== 201) {
+      notify('失敗しました', 'sub');
+    } else {
+      notify(`「${response.data.name}」を登録しました`);
+    }
   };
 
   const handleScannerModalButton = () => {

@@ -5,6 +5,7 @@ import { GoogleLogin } from 'react-google-login';
 import { api } from '../../api/apiFactory';
 import { useNavigate } from 'react-router-dom';
 import { LinkText } from '../atoms/Link';
+import { useNotificationBar } from '../../logics/UseNotificationBar';
 
 const titleWrap = css`
   margin-bottom: 16px;
@@ -27,6 +28,7 @@ type Props = {
 };
 
 export const LoginForm = ({ title }: Props) => {
+  const { notify } = useNotificationBar();
   const navigate = useNavigate();
   const handleSuccessGoogle = async (response: any) => {
     try {
@@ -38,10 +40,10 @@ export const LoginForm = ({ title }: Props) => {
     } catch (e) {
       switch (e.response.status) {
         case 404:
-          window.alert('未登録のユーザーです');
+          notify('未登録のユーザーです', 'sub');
           break;
         default:
-          window.alert('ネットワークエラーです');
+          notify('ネットワークエラーです', 'sub');
       }
     }
   };

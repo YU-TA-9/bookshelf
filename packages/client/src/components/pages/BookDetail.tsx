@@ -7,6 +7,7 @@ import { MainTemplate } from '../templates/MainTemplate';
 import { BookDetailCard } from '../organisms/BookDetailCard';
 import { Button } from '../atoms/Button';
 import { STATUS } from '../../api/mappings/status';
+import { useNotificationBar } from '../../logics/UseNotificationBar';
 
 const bookDetailWrap = css``;
 
@@ -15,6 +16,7 @@ type Params = {
 };
 
 export const BookDetail = () => {
+  const { notify } = useNotificationBar();
   const { id } = useParams<Params>();
   const [book, setBook] = React.useState<Book>();
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ export const BookDetail = () => {
       const { data } = await api.booksControllerPatchBookStatus(book.id, {
         status: selected,
       });
-      window.alert('ステータスを更新しました');
+      notify('ステータスを更新しました');
     } catch (e) {}
   };
 
@@ -58,7 +60,7 @@ export const BookDetail = () => {
         const { data } = await api.booksControllerPatchBookMemo(Number(id), {
           memo: inputMarkdown,
         });
-        alert('メモが更新されました');
+        notify('メモが更新されました');
       } catch (e) {}
     })();
   };
@@ -68,7 +70,7 @@ export const BookDetail = () => {
       try {
         if (confirm(`「${book.name}」を削除しますか？`)) {
           const { data } = await api.booksControllerDeleteBook(Number(id));
-          alert('削除しました');
+          notify('削除しました', 'sub');
           navigate('/');
         }
       } catch (e) {}
