@@ -10,6 +10,7 @@ import { status, statusLabel } from '../../api/mappings/status';
 import { Popup } from '../atoms/Popup';
 import { api } from '../../api/apiFactory';
 import { CategoryMenuElement } from '../atoms/CategoryMenuElement';
+import { useNotificationBar } from '../../logics/UseNotificationBar';
 
 const table = css`
   text-align: center;
@@ -60,6 +61,7 @@ export const BookDetailCard = ({
   inputMarkdown,
   handleMarkdownChange,
 }: Props) => {
+  const { notify } = useNotificationBar();
   const [showHTML, setShowHTML] = React.useState<boolean>(true);
   const [showCategory, setShowCategory] = React.useState<boolean>(false);
   const [categories, setCategories] = React.useState<Category[]>([]);
@@ -76,7 +78,7 @@ export const BookDetailCard = ({
     const { data } = await api.booksControllerPatchBookCategory(book.id, {
       category: id,
     });
-    alert('カテゴリーを更新しました');
+    notify('カテゴリーを更新しました');
   };
 
   return (

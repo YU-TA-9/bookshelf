@@ -32,6 +32,7 @@ export const Scanner = ({ setValue }: Props) => {
         width={scannerWidth}
         height={scannerWidth}
         onUpdate={(err, result) => {
+          //TODO: エラー処理検討
           if (result) {
             setValue(result.getText());
           } else {

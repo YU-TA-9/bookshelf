@@ -4,9 +4,10 @@ import { Category } from '../../api/generated';
 import { BasicTable } from '../atoms/BasicTable';
 import { Popup } from '../atoms/Popup';
 import { LabelAndTextForm } from '../molecules/LabelAndTextForm';
-import { DeleteButton } from '../atoms/DeeteButton';
+import { DeleteButton } from '../atoms/DeleteButton';
 import { ColorPicker } from '../molecules/ColorPicker';
 import { ColorLabel } from '../molecules/ColorLabel';
+import { useNotificationBar } from '../../logics/UseNotificationBar';
 
 type Props = {
   categories: Category[];
@@ -14,6 +15,7 @@ type Props = {
 };
 
 export const CategoryTable = ({ categories, setCategories }: Props) => {
+  const { notify } = useNotificationBar();
   const [inputName, setInputName] = React.useState<string>('');
   const [selectedColor, setSelectedColor] = React.useState<string>('');
   const [selectedCategory, setSelectedCategory] = React.useState<number>(0);
@@ -32,7 +34,7 @@ export const CategoryTable = ({ categories, setCategories }: Props) => {
       return newCategories;
     });
 
-    alert('カテゴリーを更新しました');
+    notify('更新しました');
   };
 
   const handleDelete = async (id: number) => {

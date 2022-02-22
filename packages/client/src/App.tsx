@@ -12,10 +12,11 @@ import { BookshelfRecoilRoot } from './logics/RecoilRoot';
 import { RecoilRoot } from 'recoil';
 import { Profile } from './components/pages/Profile';
 import { BookCategory } from './components/pages/BookCategory';
+import { NotificationProvider } from './logics/NotificationProvider';
 
 export const App = () => {
   return (
-    <>
+    <NotificationProvider>
       <RecoilRoot>
         <Global styles={globalStyle} />
         <BrowserRouter>
@@ -34,6 +35,6 @@ export const App = () => {
           </Routes>
         </BrowserRouter>
       </RecoilRoot>
-    </>
+    </NotificationProvider>
   );
 };
