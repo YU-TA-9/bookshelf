@@ -13,6 +13,7 @@ const element = (color: string) => css`
   line-height: 40px;
   color: #${color || '094067'};
   padding: 0 8px;
+  cursor: pointer;
 
   &:hover {
     background: #a1d7ff;
