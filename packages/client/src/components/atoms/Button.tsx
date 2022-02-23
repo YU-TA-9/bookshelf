@@ -1,8 +1,9 @@
-import { css } from '@emotion/react';
+import { css, Interpolation, Theme } from '@emotion/react';
 
 type Background = 'main' | 'sub';
 
 type Props = {
+  cssProps?: Interpolation<Theme>;
   label: string;
   onClick: (...args: any[]) => void;
   width?: number;
@@ -34,6 +35,7 @@ const button = (
 `;
 
 export const Button = ({
+  cssProps,
   label,
   onClick,
   width,
@@ -43,7 +45,7 @@ export const Button = ({
 }: Props) => {
   return (
     <button
-      css={button(width, background, fullWidth, inline)}
+      css={[button(width, background, fullWidth, inline), cssProps]}
       onClick={onClick}
     >
       {label}

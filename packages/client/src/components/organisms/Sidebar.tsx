@@ -34,7 +34,7 @@ export const Sidebar = () => {
     <div css={sidebar}>
       <ul css={itemList}>
         <li css={item}>
-          <LinkText isReactRouter text="登録" to="/register"></LinkText>
+          <LinkText isReactRouter text="一覧" to="/"></LinkText>
         </li>
         <li css={item}>
           <LinkText isReactRouter text="カテゴリー" to="/category"></LinkText>
