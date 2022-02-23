@@ -1,4 +1,6 @@
 import { css } from '@emotion/react';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import * as clonedeep from 'lodash.clonedeep';
 import { Book, Category } from '../../api/generated';
 import { dateText } from '../../utils/dateUtil';
 import { fontSize } from '../../styles/fontSize';
@@ -11,6 +13,9 @@ import { Popup } from '../atoms/Popup';
 import { api } from '../../api/apiFactory';
 import { CategoryMenuElement } from '../atoms/CategoryMenuElement';
 import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { categoriesState } from '../../states/atoms/category';
+import { selectedCategoryState } from '../../states/selectors/category';
+import { booksState, useBookUpdate } from '../../states/atoms/book';
 
 const table = css`
   text-align: center;
@@ -29,9 +34,13 @@ const bookTitle = css`
   font-weight: 700;
 `;
 
-const category = css`
+const category = (color: string = '#000000') => css`
   display: inline-block;
   cursor: pointer;
+  color: ${color};
+  border: 2px solid ${color};
+  border-radius: 12px;
+  padding: 4px;
 
   &:hover {
     background: #e4e4e4;
@@ -61,24 +70,30 @@ export const BookDetailCard = ({
   inputMarkdown,
   handleMarkdownChange,
 }: Props) => {
+  const [books, setBooks] = useRecoilState(booksState);
+  const [categories, setCategories] = useRecoilState(categoriesState);
+  const bookCategory = useRecoilValue(selectedCategoryState(book.category));
   const { notify } = useNotificationBar();
   const [showHTML, setShowHTML] = React.useState<boolean>(true);
   const [showCategory, setShowCategory] = React.useState<boolean>(false);
-  const [categories, setCategories] = React.useState<Category[]>([]);
 
   const handleShowCategory = async () => {
     setShowCategory(true);
-    if (!categories.length) {
-      const { data } = await api.categoriesControllerGetCategories();
-      setCategories(data);
-    }
   };
 
   const handleChangeCategory = async (id: number) => {
     const { data } = await api.booksControllerPatchBookCategory(book.id, {
       category: id,
     });
+
+    const newBook = clonedeep(book);
+    const newBooks = clonedeep(books);
+    newBook.category = data.category;
+    newBooks[newBooks.findIndex((e) => e.id === book.id)] = newBook;
+    setBooks(newBooks);
+
     notify('カテゴリーを更新しました');
+    setShowCategory(false);
   };
 
   return (
@@ -89,8 +104,8 @@ export const BookDetailCard = ({
         </li>
         <li css={bookTitle}>{book?.name}</li>
         <li>
-          <div css={category} onClick={handleShowCategory}>
-            {book?.category || '未設定'}
+          <div css={category(bookCategory?.color)} onClick={handleShowCategory}>
+            {bookCategory?.name || '未設定'}
           </div>
           {showCategory && (
             <Popup

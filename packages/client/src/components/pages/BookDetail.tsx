@@ -1,13 +1,14 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
+import { useRecoilValue } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Book } from '../../api/generated';
 import { api } from '../../api/apiFactory';
 import { MainTemplate } from '../templates/MainTemplate';
 import { BookDetailCard } from '../organisms/BookDetailCard';
 import { Button } from '../atoms/Button';
 import { STATUS } from '../../api/mappings/status';
 import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { selectedBookState } from '../../states/selectors/book';
 
 const bookDetailWrap = css``;
 
@@ -16,9 +17,9 @@ type Params = {
 };
 
 export const BookDetail = () => {
-  const { notify } = useNotificationBar();
   const { id } = useParams<Params>();
-  const [book, setBook] = React.useState<Book>();
+  const book = useRecoilValue(selectedBookState(Number(id)));
+  const { notify } = useNotificationBar();
   const navigate = useNavigate();
 
   const [selectedStatusValue, setSelectedStatusValue] = React.useState<number>(
@@ -28,13 +29,10 @@ export const BookDetail = () => {
 
   React.useEffect(() => {
     (async () => {
-      const { data } = await api.booksControllerGetBook(Number(id));
-      setBook(data);
-
-      setInputMarkDown(data.memo || '');
-      setSelectedStatusValue(data.status);
+      setInputMarkDown(book.memo || '');
+      setSelectedStatusValue(book.status);
     })();
-  }, []);
+  }, [book]);
 
   const handleStatusChange = async (
     e: React.ChangeEvent<HTMLSelectElement>,
