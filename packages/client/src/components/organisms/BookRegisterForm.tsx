@@ -52,6 +52,12 @@ export const BookRegisterForm = ({}: Props) => {
       try {
         const response = await api.booksControllerCreateBook({ isbn: code });
         notify(`「${response.data.name}」を登録しました`);
+      } catch (e) {
+        if (e.response.status !== 404) {
+          notify('該当する書籍が見つかりませんでした', 'sub');
+        } else {
+          notify('ネットワークエラーです', 'sub');
+        }
       } finally {
         setOpenScanner(false);
       }
@@ -59,11 +65,13 @@ export const BookRegisterForm = ({}: Props) => {
   }, [code]);
 
   const handleRegister = async () => {
-    const response = await api.booksControllerCreateBook({ isbn: isbn });
-    if (response.status !== 201) {
-      notify('失敗しました', 'sub');
-    } else {
+    try {
+      const response = await api.booksControllerCreateBook({ isbn: isbn });
       notify(`「${response.data.name}」を登録しました`);
+    } catch (e) {
+      if (e.response.status !== 201) {
+        notify('該当する書籍が見つかりませんでした', 'sub');
+      }
     }
   };
 
