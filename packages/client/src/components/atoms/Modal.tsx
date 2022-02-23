@@ -1,18 +1,19 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
+import { ModalPortal } from '../../logics/ModalPortal';
 
 type Props = {
   children: React.ReactNode;
+  isOpen: boolean;
   onClose: () => void;
 };
 
 const modalWrap = css`
   z-index: 10001;
   position: fixed;
-  width: 50%;
-  max-width: 450px;
+  min-width: 450px;
   margin: 1.5em auto 0;
-  padding: 10px 20px;
+  padding: 24px;
   border: 2px solid #aaa;
   background: #fff;
   top: 50%;
@@ -30,11 +31,13 @@ const overlay = css`
   background-color: rgba(0, 0, 0, 0.75);
 `;
 
-export const Modal = ({ children, onClose }: Props) => {
+export const Modal = ({ children, isOpen, onClose }: Props) => {
   return (
-    <div>
-      <div css={modalWrap}>{children}</div>
-      <div css={overlay} onClick={onClose} />
-    </div>
+    isOpen && (
+      <ModalPortal>
+        <div css={modalWrap}>{children}</div>
+        <div css={overlay} onClick={onClose} />
+      </ModalPortal>
+    )
   );
 };

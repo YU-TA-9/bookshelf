@@ -27,6 +27,7 @@ export const fade = keyframes`
 `;
 
 const barWrap = (index: number) => css`
+  z-index: 20000;
   animation-name: ${fade};
   animation-duration: 5s;
   animation-timing-function: linear;
