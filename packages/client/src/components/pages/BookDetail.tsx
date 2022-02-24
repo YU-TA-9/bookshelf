@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import * as React from 'react';
 import { useRecoilValue } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
 import { api } from '../../api/apiFactory';
@@ -9,7 +8,9 @@ import { Button } from '../atoms/Button';
 import { useNotificationBar } from '../../logics/UseNotificationBar';
 import { selectedBookState } from '../../states/selectors/book';
 
-const bookDetailWrap = css``;
+const bookDetailWrap = css`
+  margin-bottom: 16px;
+`;
 
 type Params = {
   id: string;
@@ -20,29 +21,6 @@ export const BookDetail = () => {
   const book = useRecoilValue(selectedBookState(Number(id)));
   const { notify } = useNotificationBar();
   const navigate = useNavigate();
-
-  const [inputMarkdown, setInputMarkDown] = React.useState<string>('');
-
-  React.useEffect(() => {
-    (async () => {
-      setInputMarkDown(book.memo || '');
-    })();
-  }, [book]);
-
-  const handleMarkdownChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInputMarkDown(e.target.value);
-  };
-
-  const handleUpdateMemo = async () => {
-    (async () => {
-      try {
-        const { data } = await api.booksControllerPatchBookMemo(Number(id), {
-          memo: inputMarkdown,
-        });
-        notify('メモが更新されました');
-      } catch (e) {}
-    })();
-  };
 
   const handleDelete = async () => {
     (async () => {
@@ -59,15 +37,10 @@ export const BookDetail = () => {
   return (
     <MainTemplate title="書籍詳細">
       <div css={bookDetailWrap}>
-        <BookDetailCard
-          book={book}
-          inputMarkdown={inputMarkdown}
-          handleMarkdownChange={handleMarkdownChange}
-        />
+        <BookDetailCard book={book} />
       </div>
-      <Button label="更新" onClick={() => handleUpdateMemo()} width={180} />
       <Button
-        label="削除"
+        label="本を削除"
         background="sub"
         onClick={() => handleDelete()}
         width={180}
