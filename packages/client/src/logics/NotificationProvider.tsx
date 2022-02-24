@@ -66,7 +66,7 @@ export const NotificationProvider = ({ children }: Props) => {
     }
   }, [barState.queue]);
 
-  const test2 = (id: string) => {
+  const handleAnimationEnd = (id: string) => {
     setBarState({
       ...barState,
       view: barState.view.filter((e, i) => e.id !== id),
@@ -76,7 +76,10 @@ export const NotificationProvider = ({ children }: Props) => {
   return (
     <NotificationBarContext.Provider value={{ notify }}>
       {children}
-      <NotificationRoot bars={barState.view} handleAnimationEnd={test2} />
+      <NotificationRoot
+        bars={barState.view}
+        handleAnimationEnd={handleAnimationEnd}
+      />
     </NotificationBarContext.Provider>
   );
 };
