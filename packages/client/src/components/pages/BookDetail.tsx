@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
+import { useRecoilValue } from 'recoil';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Book } from '../../api/generated';
 import { api } from '../../api/apiFactory';
 import { MainTemplate } from '../templates/MainTemplate';
 import { BookDetailCard } from '../organisms/BookDetailCard';
 import { Button } from '../atoms/Button';
-import { STATUS } from '../../api/mappings/status';
 import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { selectedBookState } from '../../states/selectors/book';
 
 const bookDetailWrap = css``;
 
@@ -16,39 +16,18 @@ type Params = {
 };
 
 export const BookDetail = () => {
-  const { notify } = useNotificationBar();
   const { id } = useParams<Params>();
-  const [book, setBook] = React.useState<Book>();
+  const book = useRecoilValue(selectedBookState(Number(id)));
+  const { notify } = useNotificationBar();
   const navigate = useNavigate();
 
-  const [selectedStatusValue, setSelectedStatusValue] = React.useState<number>(
-    STATUS.waiting,
-  );
   const [inputMarkdown, setInputMarkDown] = React.useState<string>('');
 
   React.useEffect(() => {
     (async () => {
-      const { data } = await api.booksControllerGetBook(Number(id));
-      setBook(data);
-
-      setInputMarkDown(data.memo || '');
-      setSelectedStatusValue(data.status);
+      setInputMarkDown(book.memo || '');
     })();
-  }, []);
-
-  const handleStatusChange = async (
-    e: React.ChangeEvent<HTMLSelectElement>,
-  ) => {
-    try {
-      // MEMO: e.target.valueの値はawait前後で変わる場合があるので変数に格納して使う
-      const selected = Number(e.target.value);
-      setSelectedStatusValue(selected);
-      const { data } = await api.booksControllerPatchBookStatus(book.id, {
-        status: selected,
-      });
-      notify('ステータスを更新しました');
-    } catch (e) {}
-  };
+  }, [book]);
 
   const handleMarkdownChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputMarkDown(e.target.value);
@@ -82,8 +61,6 @@ export const BookDetail = () => {
       <div css={bookDetailWrap}>
         <BookDetailCard
           book={book}
-          selectedStatus={selectedStatusValue}
-          handleStatusChange={handleStatusChange}
           inputMarkdown={inputMarkdown}
           handleMarkdownChange={handleMarkdownChange}
         />

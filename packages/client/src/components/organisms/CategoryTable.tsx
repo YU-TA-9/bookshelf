@@ -1,4 +1,5 @@
 import * as React from 'react';
+import * as clonedeep from 'lodash.clonedeep';
 import { api } from '../../api/apiFactory';
 import { Category } from '../../api/generated';
 import { BasicTable } from '../atoms/BasicTable';
@@ -27,7 +28,8 @@ export const CategoryTable = ({ categories, setCategories }: Props) => {
     });
 
     setCategories((prevState) => {
-      const newCategories = [...prevState];
+      const categoriesCopy = clonedeep(prevState);
+      const newCategories = [...categoriesCopy];
       const index = newCategories.findIndex((e, i) => e.id === data.id);
       newCategories[index].name = data.name;
       newCategories[index].color = data.color;

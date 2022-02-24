@@ -1,16 +1,27 @@
 import { css } from '@emotion/react';
-import { Book, Category } from '../../api/generated';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import * as clonedeep from 'lodash.clonedeep';
+import { Book } from '../../api/generated';
 import { dateText } from '../../utils/dateUtil';
 import { fontSize } from '../../styles/fontSize';
 import * as React from 'react';
 import { MarkdownAndHTMLArea } from '../molecules/MarkdownAndHTMLArea';
 import { Button } from '../atoms/Button';
-import { SelectBox } from '../atoms/SelectBox';
-import { status, statusLabel } from '../../api/mappings/status';
+import { STATUS, statusLabel } from '../../api/mappings/status';
 import { Popup } from '../atoms/Popup';
 import { api } from '../../api/apiFactory';
 import { CategoryMenuElement } from '../atoms/CategoryMenuElement';
 import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { categoriesState } from '../../states/atoms/category';
+import { selectedCategoryState } from '../../states/selectors/category';
+import { booksState, useBookUpdate } from '../../states/atoms/book';
+import { MenuElement } from '../atoms/MenuElement';
+
+type Props = {
+  book: Book;
+  inputMarkdown: string;
+  handleMarkdownChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+};
 
 const table = css`
   text-align: center;
@@ -29,9 +40,13 @@ const bookTitle = css`
   font-weight: 700;
 `;
 
-const category = css`
+const selectable = (color: string = '#000000') => css`
   display: inline-block;
   cursor: pointer;
+  color: ${color};
+  border: 2px solid ${color};
+  border-radius: 12px;
+  padding: 4px;
 
   &:hover {
     background: #e4e4e4;
@@ -46,39 +61,53 @@ const markdownAreaWrap = css`
   margin-bottom: 16px;
 `;
 
-type Props = {
-  book: Book;
-  selectedStatus: status;
-  handleStatusChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  inputMarkdown: string;
-  handleMarkdownChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
-};
-
 export const BookDetailCard = ({
   book,
-  selectedStatus,
-  handleStatusChange,
   inputMarkdown,
   handleMarkdownChange,
 }: Props) => {
+  const [books, setBooks] = useRecoilState(booksState);
+  const [categories, setCategories] = useRecoilState(categoriesState);
+  const bookCategory = useRecoilValue(selectedCategoryState(book.category));
   const { notify } = useNotificationBar();
   const [showHTML, setShowHTML] = React.useState<boolean>(true);
   const [showCategory, setShowCategory] = React.useState<boolean>(false);
-  const [categories, setCategories] = React.useState<Category[]>([]);
+  const [showStatus, setShowStatus] = React.useState<boolean>(false);
+
+  const updateBookState = (book: Book) => {
+    const newBooks = clonedeep(books);
+    newBooks[newBooks.findIndex((e) => e.id === book.id)] = book;
+    setBooks(newBooks);
+  };
 
   const handleShowCategory = async () => {
     setShowCategory(true);
-    if (!categories.length) {
-      const { data } = await api.categoriesControllerGetCategories();
-      setCategories(data);
-    }
   };
 
   const handleChangeCategory = async (id: number) => {
     const { data } = await api.booksControllerPatchBookCategory(book.id, {
       category: id,
     });
+
+    const newBook = clonedeep(book);
+    newBook.category = data.category;
+    updateBookState(newBook);
+
     notify('カテゴリーを更新しました');
+    setShowCategory(false);
+  };
+
+  const handleChangeStatus = async (id: number) => {
+    const { data } = await api.booksControllerPatchBookStatus(book.id, {
+      status: id,
+    });
+
+    const newBook = clonedeep(book);
+    newBook.status = data.status;
+    updateBookState(newBook);
+
+    notify('ステータスを更新しました');
+    setShowStatus(false);
   };
 
   return (
@@ -89,9 +118,9 @@ export const BookDetailCard = ({
         </li>
         <li css={bookTitle}>{book?.name}</li>
         <li>
-          <div css={category} onClick={handleShowCategory}>
-            {book?.category || '未設定'}
-          </div>
+          <p css={selectable(bookCategory?.color)} onClick={handleShowCategory}>
+            {bookCategory?.name || '未設定'}
+          </p>
           {showCategory && (
             <Popup
               position="absolute"
@@ -116,16 +145,39 @@ export const BookDetailCard = ({
         <li>{book?.author}</li>
         <li>{book?.publisher}</li>
         <li>
-          <SelectBox
-            value={selectedStatus}
-            options={Object.keys(statusLabel).map((key, i) => {
-              return {
-                value: key,
-                label: statusLabel[key],
-              };
-            })}
-            onChange={handleStatusChange}
-          />
+          <p
+            css={selectable}
+            onClick={() => {
+              setShowStatus(true);
+            }}
+          >
+            {book.status
+              ? statusLabel[book.status]
+              : statusLabel[STATUS.waiting]}
+          </p>
+          {showStatus && (
+            <Popup
+              position="absolute"
+              width={180}
+              top={0}
+              left="50%"
+              handleHide={() => {
+                setShowStatus(false);
+              }}
+            >
+              {Object.keys(statusLabel).map((key, i) => {
+                return (
+                  <MenuElement
+                    key={i}
+                    label={statusLabel[key]}
+                    onClick={() => {
+                      handleChangeStatus(Number(key));
+                    }}
+                  />
+                );
+              })}
+            </Popup>
+          )}
         </li>
         <li>{`登録日：${dateText(book?.createdAt)}`}</li>
       </ul>
