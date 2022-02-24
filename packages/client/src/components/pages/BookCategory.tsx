@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { api } from '../../api/apiFactory';
-import { Category } from '../../api/generated';
+import { useRecoilState } from 'recoil';
 import { MainTemplate } from '../templates/MainTemplate';
 import { Button } from '../atoms/Button';
 import { CategoryTable } from '../organisms/CategoryTable';
 import { css } from '@emotion/react';
+import { categoriesState } from '../../states/atoms/category';
 
 const tableWrap = css`
   margin-bottom: 16px;
 `;
 
 export const BookCategory = () => {
-  const [categories, setCategories] = React.useState<Category[]>([]);
+  const [categories, setCategories] = useRecoilState(categoriesState);
 
   React.useEffect(() => {
     (async () => {
