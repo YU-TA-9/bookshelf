@@ -19,8 +19,6 @@ import { MenuElement } from '../atoms/MenuElement';
 
 type Props = {
   book: Book;
-  inputMarkdown: string;
-  handleMarkdownChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 };
 
 const table = css`
@@ -61,11 +59,7 @@ const markdownAreaWrap = css`
   margin-bottom: 16px;
 `;
 
-export const BookDetailCard = ({
-  book,
-  inputMarkdown,
-  handleMarkdownChange,
-}: Props) => {
+export const BookDetailCard = ({ book }: Props) => {
   const [books, setBooks] = useRecoilState(booksState);
   const [categories, setCategories] = useRecoilState(categoriesState);
   const bookCategory = useRecoilValue(selectedCategoryState(book.category));
@@ -73,6 +67,9 @@ export const BookDetailCard = ({
   const [showHTML, setShowHTML] = React.useState<boolean>(true);
   const [showCategory, setShowCategory] = React.useState<boolean>(false);
   const [showStatus, setShowStatus] = React.useState<boolean>(false);
+  const [inputMarkdown, setInputMarkDown] = React.useState<string>(
+    book.memo || '',
+  );
 
   const updateBookState = (book: Book) => {
     const newBooks = clonedeep(books);
@@ -108,6 +105,26 @@ export const BookDetailCard = ({
 
     notify('ステータスを更新しました');
     setShowStatus(false);
+  };
+
+  const handleUpdateMemo = async () => {
+    (async () => {
+      try {
+        const { data } = await api.booksControllerPatchBookMemo(book.id, {
+          memo: inputMarkdown,
+        });
+
+        const newBook = clonedeep(book);
+        newBook.memo = data.memo;
+        updateBookState(newBook);
+
+        notify('メモを更新しました');
+      } catch (e) {}
+    })();
+  };
+
+  const handleMarkdownChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputMarkDown(e.target.value);
   };
 
   return (
@@ -197,6 +214,7 @@ export const BookDetailCard = ({
           showHTML={showHTML}
         />
       </div>
+      <Button label="更新" onClick={() => handleUpdateMemo()} width={180} />
     </>
   );
 };
