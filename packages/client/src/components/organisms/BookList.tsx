@@ -35,6 +35,7 @@ export const BookList = ({ books }: Props) => {
               onClick={() => {
                 handleDetailButton(book.id);
               }}
+              categoryId={book.category}
             />
           </div>
         ))
