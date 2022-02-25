@@ -214,7 +214,11 @@ export const BookDetailCard = ({ book }: Props) => {
           showHTML={showHTML}
         />
       </div>
-      <Button label="更新" onClick={() => handleUpdateMemo()} width={180} />
+      <Button
+        label="メモを更新"
+        onClick={() => handleUpdateMemo()}
+        width={180}
+      />
     </>
   );
 };
