@@ -54,8 +54,8 @@ export const CategoryTable = ({ categories, setCategories }: Props) => {
         </tr>
       </thead>
       <tbody>
-        {categories.map((e, i) => (
-          <tr key={i}>
+        {categories.map((e) => (
+          <tr key={e.id}>
             <td>
               <LabelAndTextForm
                 label={e.name}

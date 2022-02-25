@@ -150,7 +150,7 @@ export const BookDetailCard = ({ book }: Props) => {
             >
               {categories.map((e, i) => (
                 <CategoryMenuElement
-                  key={i}
+                  key={e.id}
                   onClick={() => handleChangeCategory(e.id)}
                   label={e.name}
                   color={e.color}
@@ -185,7 +185,7 @@ export const BookDetailCard = ({ book }: Props) => {
               {Object.keys(statusLabel).map((key, i) => {
                 return (
                   <MenuElement
-                    key={i}
+                    key={key}
                     label={statusLabel[key]}
                     onClick={() => {
                       handleChangeStatus(Number(key));
@@ -214,7 +214,11 @@ export const BookDetailCard = ({ book }: Props) => {
           showHTML={showHTML}
         />
       </div>
-      <Button label="更新" onClick={() => handleUpdateMemo()} width={180} />
+      <Button
+        label="メモを更新"
+        onClick={() => handleUpdateMemo()}
+        width={180}
+      />
     </>
   );
 };
