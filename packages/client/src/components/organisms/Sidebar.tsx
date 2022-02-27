@@ -37,6 +37,9 @@ export const Sidebar = () => {
           <LinkText isReactRouter text="一覧" to="/"></LinkText>
         </li>
         <li css={item}>
+          <LinkText isReactRouter text="グラフ" to="/graph"></LinkText>
+        </li>
+        <li css={item}>
           <LinkText isReactRouter text="カテゴリー" to="/category"></LinkText>
         </li>
         <li css={item}>

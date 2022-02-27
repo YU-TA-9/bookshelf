@@ -11,6 +11,7 @@ import { RecoilRoot } from 'recoil';
 import { Profile } from './components/pages/Profile';
 import { BookCategory } from './components/pages/BookCategory';
 import { NotificationProvider } from './logics/NotificationProvider';
+import { BookGraph } from './components/pages/BookGraph';
 
 export const App = () => {
   return (
@@ -26,6 +27,7 @@ export const App = () => {
                 <Route path="/" element={<Top />}></Route>
                 <Route path="/:id" element={<BookDetail />}></Route>
                 <Route path="/category" element={<BookCategory />}></Route>
+                <Route path="/graph" element={<BookGraph />}></Route>
                 <Route path="/user/profile" element={<Profile />}></Route>
               </Route>
             </Route>
