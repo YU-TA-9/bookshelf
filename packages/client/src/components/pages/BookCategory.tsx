@@ -6,6 +6,7 @@ import { Button } from '../atoms/Button';
 import { CategoryTable } from '../organisms/CategoryTable';
 import { css } from '@emotion/react';
 import { categoriesState } from '../../states/atoms/category';
+import { DEFAULT_CATEGORY_COLOR } from '../../constants/category';
 
 const tableWrap = css`
   margin-bottom: 16px;
@@ -24,7 +25,7 @@ export const BookCategory = () => {
   const handleAdd = async () => {
     const { data } = await api.categoriesControllerCreateCategory({
       name: `カテゴリー${categories.length + 1}`,
-      color: '#3da9fc', //default
+      color: DEFAULT_CATEGORY_COLOR,
     });
     setCategories([...categories, data]);
   };
