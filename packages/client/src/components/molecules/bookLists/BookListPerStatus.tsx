@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { useRecoilValue } from 'recoil';
 import { selectedBooksPerStatus } from '../../../states/selectors/book';
+import { ParagraphHeaderText } from '../../atoms/ParagraphHeaderText';
 import { BookCard } from '../BookCard';
 
 type Props = {};
@@ -9,10 +10,6 @@ const listWrap = css`
   display: flex;
   flex-wrap: wrap;
   min-height: 176px;
-`;
-
-const listHeader = css`
-  font-weight: 700;
 `;
 
 const item = css`
@@ -24,7 +21,7 @@ export const BookListPerStatus = ({}: Props) => {
 
   return (
     <>
-      <p css={listHeader}>読書中</p>
+      <ParagraphHeaderText>読書中</ParagraphHeaderText>
       <div css={listWrap}>
         {booksPerStatus.working.map((e) => {
           return (
@@ -34,7 +31,7 @@ export const BookListPerStatus = ({}: Props) => {
           );
         })}
       </div>
-      <p css={listHeader}>中断</p>
+      <ParagraphHeaderText>中断</ParagraphHeaderText>
       <div css={listWrap}>
         {booksPerStatus.pending.map((e) => {
           return (
@@ -44,7 +41,7 @@ export const BookListPerStatus = ({}: Props) => {
           );
         })}
       </div>
-      <p css={listHeader}>読了</p>
+      <ParagraphHeaderText>読了</ParagraphHeaderText>
       <div css={listWrap}>
         {booksPerStatus.completed.map((e) => {
           return (
@@ -54,7 +51,7 @@ export const BookListPerStatus = ({}: Props) => {
           );
         })}
       </div>
-      <p css={listHeader}>未読</p>
+      <ParagraphHeaderText>未読</ParagraphHeaderText>
       <div css={listWrap}>
         {booksPerStatus.waiting.map((e) => {
           return (
