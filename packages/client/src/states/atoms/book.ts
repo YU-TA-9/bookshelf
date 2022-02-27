@@ -8,7 +8,6 @@ export const booksState = atom<Book[]>({
 
 export const useBookUpdate = (book: Book) => {
   const updateAtom = useRecoilCallback(({ snapshot, set }) => async () => {
-    console.log('test');
     const books = await snapshot.getPromise(booksState);
     books[books.findIndex((e) => e.id === book.id)] = book;
     set(booksState, books);
