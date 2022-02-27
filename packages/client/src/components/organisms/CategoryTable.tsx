@@ -9,6 +9,8 @@ import { DeleteButton } from '../atoms/DeleteButton';
 import { ColorPicker } from '../molecules/ColorPicker';
 import { ColorLabel } from '../molecules/ColorLabel';
 import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { useRecoilState } from 'recoil';
+import { booksState } from '../../states/atoms/book';
 
 type Props = {
   categories: Category[];
@@ -17,6 +19,8 @@ type Props = {
 
 export const CategoryTable = ({ categories, setCategories }: Props) => {
   const { notify } = useNotificationBar();
+  const [books, setBooks] = useRecoilState(booksState);
+
   const [inputName, setInputName] = React.useState<string>('');
   const [selectedColor, setSelectedColor] = React.useState<string>('');
   const [selectedCategory, setSelectedCategory] = React.useState<number>(0);
@@ -39,9 +43,19 @@ export const CategoryTable = ({ categories, setCategories }: Props) => {
     notify('更新しました');
   };
 
-  const handleDelete = async (id: number) => {
-    const { data } = await api.categoriesControllerDeleteCategory(id);
-    setCategories(categories.filter((e) => e.id !== id));
+  const handleDelete = async (id: number, name: string) => {
+    if (confirm(`「${name}」を削除しますか?`)) {
+      const { data } = await api.categoriesControllerDeleteCategory(id);
+      setCategories(categories.filter((e) => e.id !== id));
+
+      const newBooks = clonedeep(books);
+      books.forEach((e, i) => {
+        if (e.category === id) {
+          newBooks[i].category = 0;
+        }
+      });
+      setBooks(newBooks);
+    }
   };
 
   return (
@@ -102,7 +116,7 @@ export const CategoryTable = ({ categories, setCategories }: Props) => {
             <td>
               <DeleteButton
                 onClick={() => {
-                  handleDelete(e.id);
+                  handleDelete(e.id, e.name);
                 }}
               />
             </td>

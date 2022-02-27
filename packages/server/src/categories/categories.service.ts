@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Book } from '../books/book.entity';
 import { CurrentUser } from '../users/user.entity';
 import { Category } from './category.entity';
 import { CreateCategoryDto } from './dtos/create-category.dto';
@@ -11,6 +12,8 @@ export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private readonly categoriesRepository: Repository<Category>,
+    @InjectRepository(Book)
+    private readonly booksRepository: Repository<Book>,
   ) {}
 
   async getCategories(user: CurrentUser): Promise<Category[]> {
@@ -40,7 +43,6 @@ export class CategoriesService {
   ): Promise<Category> {
     const category = new Category(user.id);
     const { name, color } = createCategoryDto;
-    // TODO: WEBから使うようになったらISBNコードの保持を必須にするか検討する
     category.name = name;
     category.color = color;
     return await this.categoriesRepository.save(category);
@@ -51,6 +53,9 @@ export class CategoriesService {
       where: { userId: user.id },
     });
     const result = await this.categoriesRepository.remove(category);
+
+    // MEMO: Booksテーブルから削除したカテゴリ値を全部リセットする
+    await this.booksRepository.update({ category: id }, { category: 0 });
   }
 
   async updateCategory(
