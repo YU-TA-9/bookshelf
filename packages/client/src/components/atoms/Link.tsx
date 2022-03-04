@@ -12,8 +12,11 @@ type Props = {
 const link = css`
   font-size: ${fontSize.normal};
   line-height: 28px;
-  text-decoration-line: underline;
-  color: #094067;
+  color: #5f6c7b;
+
+  &:hover {
+    opacity: 0.7;
+  }
 `;
 
 export const LinkText = ({ isReactRouter, text, to, onClick }: Props) => {

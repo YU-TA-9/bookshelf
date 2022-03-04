@@ -200,11 +200,9 @@ export const BookDetailCard = ({ book }: Props) => {
       </ul>
       <div>
         <div css={buttonWrap}>
-          <Button
-            label={showHTML ? 'to Markdown' : 'to HTML'}
-            onClick={() => setShowHTML(!showHTML)}
-            width={180}
-          />
+          <Button onClick={() => setShowHTML(!showHTML)} width={180}>
+            {showHTML ? 'to Markdown' : 'to HTML'}
+          </Button>
         </div>
       </div>
       <div css={markdownAreaWrap}>
@@ -214,11 +212,9 @@ export const BookDetailCard = ({ book }: Props) => {
           showHTML={showHTML}
         />
       </div>
-      <Button
-        label="メモを更新"
-        onClick={() => handleUpdateMemo()}
-        width={180}
-      />
+      <Button onClick={() => handleUpdateMemo()} width={180}>
+        メモを更新
+      </Button>
     </>
   );
 };

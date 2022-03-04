@@ -60,7 +60,7 @@ export const MainTemplate = ({ children, title }: Props) => {
       </div>
       <div css={content(sidebarWidth, headerHeight)}>
         <div css={titleArea}>
-          <Title text={title} />
+          <Title>{title}</Title>
         </div>
         <div css={mainArea}>{children}</div>
       </div>

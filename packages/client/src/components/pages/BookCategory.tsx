@@ -35,7 +35,9 @@ export const BookCategory = () => {
       <div css={tableWrap}>
         <CategoryTable categories={categories} setCategories={setCategories} />
       </div>
-      <Button label="追加" onClick={handleAdd} width={124} />
+      <Button onClick={handleAdd} width={124}>
+        追加
+      </Button>
     </MainTemplate>
   );
 };

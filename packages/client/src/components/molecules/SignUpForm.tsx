@@ -1,32 +1,23 @@
 import { css } from '@emotion/react';
-import { GoogleLoginButton } from '../atoms/GoogleLoginButton';
-import { Title } from '../atoms/Title';
 import { GoogleLogin } from 'react-google-login';
 import { api } from '../../api/apiFactory';
 import { useNavigate } from 'react-router-dom';
 import { LinkText } from '../atoms/Link';
+import { Button } from '../atoms/Button';
 
-const titleWrap = css`
-  margin-bottom: 16px;
+type Props = {};
+
+const loginButton = css`
+  margin-bottom: 8px;
 `;
 
-const buttonWrap = css`
-  margin: 0 auto 16px auto;
+const googleIcon = css`
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
 `;
 
-const loginLinkWrap = css`
-  margin-bottom: 16px;
-`;
-
-const contentsWrap = css`
-  text-align: center;
-`;
-
-type Props = {
-  title: string;
-};
-
-export const SignUpForm = ({ title }: Props) => {
+export const SignUpForm = ({}: Props) => {
   const navigate = useNavigate();
   const handleSuccessGoogle = async (response: any) => {
     try {
@@ -43,29 +34,30 @@ export const SignUpForm = ({ title }: Props) => {
   };
 
   return (
-    <div css={contentsWrap}>
-      <div css={titleWrap}>
-        <Title text={title} />
-      </div>
-      <div css={buttonWrap}>
-        <GoogleLogin
-          clientId={process.env.GOOGLE_CLIENT_ID}
-          render={(renderProps) => (
-            <GoogleLoginButton
-              position="center"
-              text="Sign up with google"
-              onClick={renderProps.onClick}
-              //disabled={renderProps.disabled}
+    <>
+      <GoogleLogin
+        clientId={process.env.GOOGLE_CLIENT_ID}
+        onSuccess={handleSuccessGoogle}
+        onFailure={handleFailureGoogle}
+        cookiePolicy={'single_host_origin'}
+        render={(renderProps) => (
+          <Button
+            cssProps={loginButton}
+            background="top"
+            onClick={renderProps.onClick}
+            width={240}
+          >
+            <img
+              css={googleIcon}
+              src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
             />
-          )}
-          onSuccess={handleSuccessGoogle}
-          onFailure={handleFailureGoogle}
-          cookiePolicy={'single_host_origin'}
-        />
-      </div>
-      <div css={loginLinkWrap}>
+            Googleでサインアップ
+          </Button>
+        )}
+      />
+      <p>
         <LinkText isReactRouter text="ログイン" to="/login" />
-      </div>
-    </div>
+      </p>
+    </>
   );
 };

@@ -43,12 +43,9 @@ export const BookDetail = () => {
       <div css={bookDetailWrap}>
         <BookDetailCard book={book} />
       </div>
-      <Button
-        label="本を削除"
-        background="sub"
-        onClick={() => handleDelete()}
-        width={180}
-      />
+      <Button background="sub" onClick={() => handleDelete()} width={180}>
+        本を削除
+      </Button>
     </MainTemplate>
   );
 };
