@@ -1,25 +1,29 @@
 import { css, Interpolation, Theme } from '@emotion/react';
 
-type Background = 'main' | 'sub';
+type ButtonTheme = 'main' | 'sub' | 'top';
 
 type Props = {
+  children: React.ReactNode;
   cssProps?: Interpolation<Theme>;
-  label: string;
   onClick: (...args: any[]) => void;
   width?: number;
-  background?: Background;
+  background?: ButtonTheme;
   fullWidth?: boolean;
   inline?: boolean;
 };
 
 const button = (
   width?: number,
-  background: Background = 'main',
+  background: ButtonTheme = 'main',
   fullWidth?: boolean,
   inline?: boolean,
 ) => css`
   ${inline && 'display: inline-block;'}
-  background: ${background === 'sub' ? '#fc3d3d' : '#3da9fc'};
+  background: ${background === 'sub'
+    ? '#fc3d3d'
+    : background === 'top'
+    ? '#094067'
+    : '#3da9fc'};
   border: 0;
   border-radius: 10px;
   ${fullWidth ? 'width: 100%;' : width && `width: ${width}px;`}
@@ -35,8 +39,8 @@ const button = (
 `;
 
 export const Button = ({
+  children,
   cssProps,
-  label,
   onClick,
   width,
   background,
@@ -48,7 +52,7 @@ export const Button = ({
       css={[button(width, background, fullWidth, inline), cssProps]}
       onClick={onClick}
     >
-      {label}
+      {children}
     </button>
   );
 };
