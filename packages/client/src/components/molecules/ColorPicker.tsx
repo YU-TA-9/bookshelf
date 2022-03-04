@@ -33,7 +33,7 @@ export const ColorPicker = ({ color, setColor, handleButton }: Props) => {
       <div css={colorLabel}>
         <ColorLabel color={color}></ColorLabel>
       </div>
-      <Button label="設定" onClick={handleButton} />
+      <Button onClick={handleButton}>設定</Button>
     </div>
   );
 };

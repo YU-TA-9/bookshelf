@@ -97,21 +97,22 @@ export const BookRegisterForm = ({}: Props) => {
           placeholder="ISBN"
           onChange={handleChange}
         />
-        <Button label="手入力で登録" onClick={handleRegister} width={240} />
+        <Button onClick={handleRegister} width={240}>
+          手入力で登録
+        </Button>
       </div>
       <div css={barcodeButtonsWrap}>
         <Button
           cssProps={barcodeOpenButton}
-          label="バーコード読み取り"
           onClick={handleOpenScanner}
           width={280}
-        />
+        >
+          バーコード読み取り
+        </Button>
         {openScanner && (
-          <Button
-            label="閉じる"
-            onClick={handleCloseScanner}
-            background="sub"
-          />
+          <Button onClick={handleCloseScanner} background="sub">
+            閉じる
+          </Button>
         )}
       </div>
       <div css={scannerWrap}>

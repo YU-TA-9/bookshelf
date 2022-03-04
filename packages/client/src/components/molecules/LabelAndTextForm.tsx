@@ -36,13 +36,14 @@ export const LabelAndTextForm = ({
         >
           <TextForm value={value} onChange={onChange}></TextForm>
           <Button
-            label="更新"
             onClick={() => {
               handleUpdate();
               setShowForm(false);
             }}
             inline
-          />
+          >
+            更新
+          </Button>
         </Overlay>
       ) : (
         <p
