@@ -3,7 +3,7 @@ import { GoogleLogin } from 'react-google-login';
 import { api } from '../../api/apiFactory';
 import { useNavigate } from 'react-router-dom';
 import { LinkText } from '../atoms/Link';
-import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { useNotificationBar } from '../customs/UseNotificationBar';
 import { Button } from '../atoms/Button';
 
 type Props = {};

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
-import { ModalPortal } from '../../logics/ModalPortal';
+import { ModalPortal } from '../customs/ModalPortal';
 
 type Props = {
   children: React.ReactNode;

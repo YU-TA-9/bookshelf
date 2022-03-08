@@ -8,7 +8,7 @@ import { LabelAndTextForm } from '../molecules/LabelAndTextForm';
 import { DeleteButton } from '../atoms/DeleteButton';
 import { ColorPicker } from '../molecules/ColorPicker';
 import { ColorLabel } from '../molecules/ColorLabel';
-import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { useNotificationBar } from '../customs/UseNotificationBar';
 import { useRecoilState } from 'recoil';
 import { booksState } from '../../states/atoms/book';
 

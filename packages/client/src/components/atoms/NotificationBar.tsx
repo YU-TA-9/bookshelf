@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { Type } from '../../logics/NotificationRoot';
+import { Type } from '../customs/NotificationRoot';
 import { MAX_WIDTH_SP } from '../../styles/media';
 
 type Props = {
