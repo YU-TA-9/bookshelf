@@ -2,10 +2,13 @@ import { css } from '@emotion/react';
 import { useRecoilValue } from 'recoil';
 import { HeaderText } from '../atoms/HeaderText';
 import { Link } from 'react-router-dom';
-import * as sampleLogo from '../../assets/title_logo_example.png';
+import * as Logo from '../../assets/bookshelf_logo.png';
 import { userState } from '../../states/atoms/user';
 import * as React from 'react';
 import { UserMenu } from '../molecules/UserMenu';
+import { MAX_WIDTH_SP } from '../../styles/media';
+import { SiteMenuIcon } from '../atoms/SiteMenuIcon';
+import { SiteMenu } from '../molecules/SIteMenu';
 
 const header = css`
   display: flex;
@@ -13,6 +16,7 @@ const header = css`
   width: 100%;
   height: 100%;
   background: #094067;
+  padding: 8px;
 `;
 
 const titleArea = css`
@@ -27,9 +31,9 @@ const userArea = css`
 `;
 
 const logoWrap = css`
-  width: 80px;
-  height: 80px;
-  margin-left: 16px;
+  width: 64px;
+  height: 64px;
+  margin: auto 0 auto 16px;
 
   img {
     width: 100%;
@@ -39,18 +43,25 @@ const logoWrap = css`
 
 const headerTextWrap = css`
   margin-left: 16px;
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    display: none;
+  }
 `;
 
 const userInfo = css`
-  color: #ffffff;
+  color: #fffffe;
   float: right;
-  margin-right: 16px;
-  line-height: 40px;
+  margin: auto 16px auto 0;
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    display: none;
+  }
 `;
 
 const iconWrap = css`
   float: right;
-  margin-right: 16px;
+  margin: auto 16px auto 0;
 `;
 
 const icon = css`
@@ -60,16 +71,19 @@ const icon = css`
   cursor: pointer;
 `;
 
-const userMenu = css`
-  position: absolute;
-  top: 100px;
-  right: 38px;
+const menuSP = css`
+  display: none;
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    display: block;
+  }
 `;
 
 export const Header = () => {
   const user = useRecoilValue(userState);
 
   const [showUserMenu, setShowUserMenu] = React.useState<boolean>(false);
+  const [showSiteMenu, setShowSiteMenu] = React.useState<boolean>(false);
 
   const handleUserMenu = () => {
     setShowUserMenu(true);
@@ -84,11 +98,11 @@ export const Header = () => {
       <div css={titleArea}>
         <div css={logoWrap}>
           <Link to="/">
-            <img alt="logo" src={sampleLogo}></img>
+            <img alt="logo" src={Logo} />
           </Link>
         </div>
         <div css={headerTextWrap}>
-          <HeaderText text="Bookshelf"></HeaderText>
+          <HeaderText text="Bookshelf" />
         </div>
       </div>
       <div css={userArea}>
@@ -99,11 +113,22 @@ export const Header = () => {
             onClick={handleUserMenu}
             alt="icon"
             src={user.iconUrl}
-          ></img>
+          />
+          <UserMenu isShow={showUserMenu} handleHide={handleHideMenu} />
         </div>
-        {showUserMenu && (
-          <UserMenu top={100} right={38} handleHide={handleHideMenu} />
-        )}
+        <div css={menuSP}>
+          <SiteMenuIcon
+            onClick={() => {
+              setShowSiteMenu(true);
+            }}
+          />
+          <SiteMenu
+            isShow={showSiteMenu}
+            onClose={() => {
+              setShowSiteMenu(false);
+            }}
+          />
+        </div>
       </div>
     </div>
   );

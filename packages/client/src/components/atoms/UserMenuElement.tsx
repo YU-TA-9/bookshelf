@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 type Props = {
   to: string;
   label: string;
+  onClick?: () => void;
 };
 
 const element = css`
@@ -18,9 +19,9 @@ const element = css`
   }
 `;
 
-export const UserMenuElement = ({ to, label }: Props) => {
+export const UserMenuElement = ({ to, label, onClick }: Props) => {
   return (
-    <Link to={to}>
+    <Link to={to} onClick={onClick}>
       <div css={element}>{label}</div>
     </Link>
   );

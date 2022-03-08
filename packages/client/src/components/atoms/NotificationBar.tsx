@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { Type } from '../../logics/NotificationRoot';
+import { MAX_WIDTH_SP } from '../../styles/media';
 
 type Props = {
   text: string;
@@ -15,6 +16,11 @@ const bar = (type: Type = 'main') => css`
   min-width: 400px;
   border-radius: 8px;
   box-shadow: 0 0 8px gray;
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    min-width: 240px;
+    max-width: 80%;
+  }
 `;
 
 export const NotificationBar = ({ text, type }: Props) => {
