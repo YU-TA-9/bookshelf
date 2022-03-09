@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { MAX_WIDTH_SP } from '../../styles/media';
 import { Title } from '../atoms/Title';
 import { Header } from '../organisms/Header';
 import { Sidebar } from '../organisms/Sidebar';
@@ -25,12 +26,20 @@ const headerWrap = (height: number) => css`
 const sidebarWrap = (width: number, headerHeight: number) => css`
   height: calc(100vh - ${headerHeight}px);
   width: ${width}px;
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    display: none;
+  }
 `;
 
 const content = (sidebarWidth: number, headerHeight: number) => css`
   width: calc(100% - ${sidebarWidth}px);
   height: calc(100vh - ${headerHeight}px);
   overflow: scroll;
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    width: 100%;
+  }
 `;
 
 const titleArea = css`
@@ -46,7 +55,7 @@ const mainArea = css`
   padding: 16px;
 `;
 
-const headerHeight = 124;
+const headerHeight = 96;
 const sidebarWidth = 256;
 
 export const MainTemplate = ({ children, title }: Props) => {

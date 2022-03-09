@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { api } from '../../api/apiFactory';
+import { SITE_MENU } from '../../constants/menu';
 import { LinkText } from '../atoms/Link';
 
 const sidebar = css`
@@ -22,29 +23,14 @@ const item = css`
 `;
 
 export const Sidebar = () => {
-  const handleLogout = async () => {
-    try {
-      await api.authControllerLogout();
-      localStorage.clear();
-      window.location.reload();
-    } catch (e) {}
-  };
-
   return (
     <div css={sidebar}>
       <ul css={itemList}>
-        <li css={item}>
-          <LinkText isReactRouter text="一覧" to="/"></LinkText>
-        </li>
-        <li css={item}>
-          <LinkText isReactRouter text="グラフ" to="/graph"></LinkText>
-        </li>
-        <li css={item}>
-          <LinkText isReactRouter text="カテゴリー" to="/category"></LinkText>
-        </li>
-        <li css={item}>
-          <LinkText text="ログアウト" to="#" onClick={handleLogout}></LinkText>
-        </li>
+        {SITE_MENU.map((e) => (
+          <li css={item}>
+            <LinkText isReactRouter text={e.label} to={e.to} />
+          </li>
+        ))}
       </ul>
     </div>
   );

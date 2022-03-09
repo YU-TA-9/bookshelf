@@ -11,7 +11,7 @@ import { STATUS, statusLabel } from '../../api/mappings/status';
 import { Popup } from '../atoms/Popup';
 import { api } from '../../api/apiFactory';
 import { CategoryMenuElement } from '../atoms/CategoryMenuElement';
-import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { useNotificationBar } from '../customs/UseNotificationBar';
 import { categoriesState } from '../../states/atoms/category';
 import { selectedCategoryState } from '../../states/selectors/category';
 import { booksState, useBookUpdate } from '../../states/atoms/book';

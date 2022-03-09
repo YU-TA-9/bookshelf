@@ -5,7 +5,7 @@ import { api } from '../../api/apiFactory';
 import { MainTemplate } from '../templates/MainTemplate';
 import { BookDetailCard } from '../organisms/BookDetailCard';
 import { Button } from '../atoms/Button';
-import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { useNotificationBar } from '../customs/UseNotificationBar';
 import { selectedBookState } from '../../states/selectors/book';
 import { booksState } from '../../states/atoms/book';
 

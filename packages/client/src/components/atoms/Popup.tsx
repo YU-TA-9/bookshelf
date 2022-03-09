@@ -25,8 +25,9 @@ const popup = (
   z-index: 10001;
   position: ${position};
   ${typeof top === 'string' ? `top: ${top};` : `top: ${top}px;`}
-  ${left && (typeof left === 'string' ? `left: ${left};` : `left: ${left}px;`)}
-  ${right &&
+  ${left !== undefined &&
+  (typeof left === 'string' ? `left: ${left};` : `left: ${left}px;`)}
+  ${right !== undefined &&
   (typeof right === 'string' ? `right: ${right};` : `right: ${right}px;`)}
   width: ${width}px;
   background: #fffffe;

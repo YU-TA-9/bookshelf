@@ -4,13 +4,13 @@ import { Top } from './components/pages/Top';
 import { globalStyle } from './styles/globalStyle';
 import { BookDetail } from './components/pages/BookDetail';
 import { Login } from './components/pages/Login';
-import { WithAuth } from './logics/WithAuth';
+import { WithAuth } from './components/customs/WithAuth';
 import { SignUp } from './components/pages/SignUp';
-import { BookshelfRecoilRoot } from './logics/RecoilRoot';
+import { BookshelfRecoilRoot } from './components/customs/RecoilRoot';
 import { RecoilRoot } from 'recoil';
 import { Profile } from './components/pages/Profile';
 import { BookCategory } from './components/pages/BookCategory';
-import { NotificationProvider } from './logics/NotificationProvider';
+import { NotificationProvider } from './components/customs/NotificationProvider';
 import { BookGraph } from './components/pages/BookGraph';
 
 export const App = () => {

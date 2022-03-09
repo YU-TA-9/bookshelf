@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
-import { api } from '../../api/apiFactory';
-import { Overlay } from '../../logics/Overlay';
+import { Overlay } from '../customs/Overlay';
 import { Button } from '../atoms/Button';
 import { TextForm } from '../atoms/TextForm';
 

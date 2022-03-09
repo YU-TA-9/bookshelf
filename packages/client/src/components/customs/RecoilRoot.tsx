@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { Outlet } from 'react-router-dom';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
-import { api } from '../api/apiFactory';
-import { booksState } from '../states/atoms/book';
-import { categoriesState } from '../states/atoms/category';
-import { requireLoadingState } from '../states/atoms/loading';
-import { userState } from '../states/atoms/user';
+import { api } from '../../api/apiFactory';
+import { booksState } from '../../states/atoms/book';
+import { categoriesState } from '../../states/atoms/category';
+import { requireLoadingState } from '../../states/atoms/loading';
+import { userState } from '../../states/atoms/user';
 
 export const BookshelfRecoilRoot = () => {
   const requireLoading = useRecoilValue(requireLoadingState);

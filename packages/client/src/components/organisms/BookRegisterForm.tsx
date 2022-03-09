@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
 import { api } from '../../api/apiFactory';
-import { useNotificationBar } from '../../logics/UseNotificationBar';
+import { useNotificationBar } from '../customs/UseNotificationBar';
 import { Button } from '../atoms/Button';
 import { Scanner } from '../atoms/Scanner';
 import { TextForm } from '../atoms/TextForm';

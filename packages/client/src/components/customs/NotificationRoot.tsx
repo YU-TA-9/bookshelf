@@ -1,5 +1,5 @@
 import { css, keyframes } from '@emotion/react';
-import { NotificationBar } from '../components/atoms/NotificationBar';
+import { NotificationBar } from '../atoms/NotificationBar';
 
 export type Type = 'main' | 'sub';
 
