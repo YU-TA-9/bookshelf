@@ -111,7 +111,7 @@ export class AuthService {
     res.cookie('access_token', token, {
       httpOnly: true,
       domain: domain,
-      expires: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 1週間
     });
   }
 
