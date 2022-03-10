@@ -53,8 +53,10 @@ export const BookRegisterForm = ({}: Props) => {
         const response = await api.booksControllerCreateBook({ isbn: code });
         notify(`「${response.data.name}」を登録しました`);
       } catch (e) {
-        if (e.response.status !== 404) {
+        if (e.response.status === 404) {
           notify('該当する書籍が見つかりませんでした', 'sub');
+        } else if (e.response.status === 409) {
+          notify('既に登録済みです', 'sub');
         } else {
           notify('ネットワークエラーです', 'sub');
         }
@@ -69,8 +71,12 @@ export const BookRegisterForm = ({}: Props) => {
       const response = await api.booksControllerCreateBook({ isbn: isbn });
       notify(`「${response.data.name}」を登録しました`);
     } catch (e) {
-      if (e.response.status !== 201) {
+      if (e.response.status === 404) {
         notify('該当する書籍が見つかりませんでした', 'sub');
+      } else if (e.response.status === 409) {
+        notify('既に登録済みです', 'sub');
+      } else {
+        notify('ネットワークエラーです', 'sub');
       }
     }
   };
