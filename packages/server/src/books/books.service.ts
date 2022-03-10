@@ -1,5 +1,11 @@
 import { HttpService } from '@nestjs/axios';
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { map, Observable } from 'rxjs';
 import { Book, CATEGORY_UNSET, Status } from '../books/book.entity';
@@ -28,13 +34,7 @@ export class BooksService {
       where: { userId: user.id },
     });
     if (!book) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: `Not found with ${id}`,
-        },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(`Not found with ${id}`);
     }
 
     return book;
@@ -53,8 +53,16 @@ export class BooksService {
     // set default
     book.status = Status.WAITING;
     book.category = CATEGORY_UNSET;
-    // TODO: 重複チェックでエラーレスポンスを返すようにする
-    return await this.booksRepository.save(book);
+    try {
+      return await this.booksRepository.save(book);
+    } catch (e) {
+      if (e.code === 'ER_DUP_ENTRY') {
+        // TODO: 検討
+        throw new ConflictException(`Duplicated isbn:}`);
+      } else {
+        throw new InternalServerErrorException('error');
+      }
+    }
   }
 
   createBook(
@@ -67,19 +75,13 @@ export class BooksService {
         `https://app.rakuten.co.jp/services/api/BooksBook/Search/20170404?format=json&outOfStockFlag=1&isbn=${createBookDto.isbn}&applicationId=${process.env.RAKUTEN_API_ID}`,
       )
       .pipe(
-        map((response) => {
+        map(async (response) => {
           // TODO: 楽天APIのインターフェースを定義したい
           console.info('Rakuten API search result:', response);
           const count = response.data.count;
 
           if (!count) {
-            throw new HttpException(
-              {
-                status: HttpStatus.NOT_FOUND,
-                error: `Not found with ${createBookDto.isbn}`,
-              },
-              HttpStatus.NOT_FOUND,
-            );
+            throw new NotFoundException(`Not found with ${createBookDto.isbn}`);
           }
 
           const data = response.data.Items[0].Item;
@@ -94,7 +96,17 @@ export class BooksService {
           book.category = CATEGORY_UNSET;
           book.image_path = data.largeImageUrl;
           // TODO: 重複チェックでエラーレスポンスを返すようにする
-          return this.booksRepository.save(book);
+          try {
+            return await this.booksRepository.save(book);
+          } catch (e) {
+            if (e.code === 'ER_DUP_ENTRY') {
+              throw new ConflictException(
+                `Duplicated isbn: ${createBookDto.isbn}`,
+              );
+            } else {
+              throw new InternalServerErrorException('error');
+            }
+          }
         }),
       );
   }
@@ -103,6 +115,10 @@ export class BooksService {
     const book = await this.booksRepository.findOne(id, {
       where: { userId: user.id },
     });
+
+    if (!book) {
+      throw new NotFoundException(`Not found with ${id}`);
+    }
     const result = await this.booksRepository.remove(book);
   }
 
@@ -115,6 +131,10 @@ export class BooksService {
     const book = await this.booksRepository.findOneOrFail(id, {
       where: { userId: user.id },
     });
+
+    if (!book) {
+      throw new NotFoundException(`Not found with ${id}`);
+    }
     book.memo = patchBookMemoDto.memo;
     return await this.booksRepository.save(book);
   }
@@ -128,6 +148,9 @@ export class BooksService {
     const book = await this.booksRepository.findOneOrFail(id, {
       where: { userId: user.id },
     });
+    if (!book) {
+      throw new NotFoundException(`Not found with ${id}`);
+    }
     book.status = patchBookStatusDto.status;
     return await this.booksRepository.save(book);
   }
@@ -141,6 +164,9 @@ export class BooksService {
     const book = await this.booksRepository.findOneOrFail(id, {
       where: { userId: user.id },
     });
+    if (!book) {
+      throw new NotFoundException(`Not found with ${id}`);
+    }
     book.category = patchBookCategoryDto.category;
     return await this.booksRepository.save(book);
   }

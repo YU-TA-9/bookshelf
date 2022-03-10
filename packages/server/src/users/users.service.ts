@@ -1,4 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserWithProviderDto } from './dtos/create-user-with-provider.dto';
@@ -53,11 +57,12 @@ export class UsersService {
     try {
       return await this.usersRepository.save(user);
     } catch (e) {
-      console.error(e);
-      throw new HttpException(
-        { message: 'Duplicated user' },
-        HttpStatus.BAD_REQUEST,
-      );
+      if (e.code === 'ER_DUP_ENTRY') {
+        // TODO: 検討
+        throw new ConflictException('Duplicated user');
+      } else {
+        throw new InternalServerErrorException('error');
+      }
     }
   }
 }
