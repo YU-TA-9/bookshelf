@@ -26,8 +26,8 @@ export const Sidebar = () => {
   return (
     <div css={sidebar}>
       <ul css={itemList}>
-        {SITE_MENU.map((e) => (
-          <li css={item}>
+        {SITE_MENU.map((e, i) => (
+          <li key={i} css={item}>
             <LinkText isReactRouter text={e.label} to={e.to} />
           </li>
         ))}
