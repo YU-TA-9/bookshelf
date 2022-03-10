@@ -1,4 +1,9 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Book } from '../books/book.entity';
@@ -25,13 +30,7 @@ export class CategoriesService {
       where: { userId: user.id },
     });
     if (!category) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: `Not found with ${id}`,
-        },
-        HttpStatus.NOT_FOUND,
-      );
+      throw new NotFoundException(`Not found with ${id}`);
     }
 
     return category;
@@ -52,6 +51,9 @@ export class CategoriesService {
     const category = await this.categoriesRepository.findOne(id, {
       where: { userId: user.id },
     });
+    if (!category) {
+      throw new NotFoundException(`Not found with ${id}`);
+    }
     const result = await this.categoriesRepository.remove(category);
 
     // MEMO: Booksテーブルから削除したカテゴリ値を全部リセットする
@@ -67,6 +69,9 @@ export class CategoriesService {
     const category = await this.categoriesRepository.findOneOrFail(id, {
       where: { userId: user.id },
     });
+    if (!category) {
+      throw new NotFoundException(`Not found with ${id}`);
+    }
     category.name = patchCategoryDto.name;
     category.color = patchCategoryDto.color;
     return await this.categoriesRepository.save(category);
