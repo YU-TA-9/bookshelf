@@ -209,12 +209,10 @@ export const BookDetailCard = ({ book }: Props) => {
         <MarkdownAndHTMLArea
           value={inputMarkdown}
           onChange={handleMarkdownChange}
+          onBlur={handleUpdateMemo}
           showHTML={showHTML}
         />
       </div>
-      <Button onClick={() => handleUpdateMemo()} width={180}>
-        メモを更新
-      </Button>
     </>
   );
 };

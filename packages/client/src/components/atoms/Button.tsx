@@ -1,4 +1,5 @@
 import { css, Interpolation, Theme } from '@emotion/react';
+import { MAX_WIDTH_SP } from '../../styles/media';
 
 type ButtonTheme = 'main' | 'sub' | 'top';
 
@@ -35,6 +36,10 @@ const button = (
   &:hover {
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     cursor: pointer;
+  }
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    width: 100%;
   }
 `;
 
