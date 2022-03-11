@@ -6,34 +6,45 @@ import { TextareaForm } from '../atoms/TextareaForm';
 type Props = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
   showHTML: boolean;
 };
 const defaultHeight = '400px';
 
-const markdownAndHtmlArea = css`
+const markdownAndHtmlArea = (showHTML: boolean) => css`
+  display: flex;
   position: relative;
-  width: 100%;
-  max-height: 800px;
+  width: 200%;
+  height: auto;
   overflow: hidden;
   overflow-y: scroll;
+  transform: ${showHTML ? 'translateX(-50%)' : 'translateX(0%)'};
+
+  transition: transform ease-in 0.3s;
 `;
 
 const textFormWrap = (showHTML: boolean) => css`
-  height: ${defaultHeight};
-  display: ${!showHTML ? 'block' : 'none'};
+  visibility: ${!showHTML ? 'visible' : 'hidden'};
+  width: 100%;
 `;
 
 const htmlTextAreaWrap = (showHTML: boolean) => css`
+  width: 100%;
   height: 100%;
   min-height: ${defaultHeight};
-  display: ${showHTML ? 'block' : 'none'};
+  visibility: ${showHTML ? 'visible' : 'hidden'};
 `;
 
-export const MarkdownAndHTMLArea = ({ value, onChange, showHTML }: Props) => {
+export const MarkdownAndHTMLArea = ({
+  value,
+  onChange,
+  onBlur,
+  showHTML,
+}: Props) => {
   return (
-    <div css={markdownAndHtmlArea}>
+    <div css={markdownAndHtmlArea(showHTML)}>
       <div css={textFormWrap(showHTML)}>
-        <TextareaForm value={value} onChange={onChange} />
+        <TextareaForm value={value} onChange={onChange} onBlur={onBlur} />
       </div>
       <div css={htmlTextAreaWrap(showHTML)}>
         <HTMLTextarea value={value} />

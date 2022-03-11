@@ -53,6 +53,7 @@ const mainArea = css`
   border-radius: 10px;
   margin: 16px;
   padding: 16px;
+  overflow: hidden;
 `;
 
 const headerHeight = 96;

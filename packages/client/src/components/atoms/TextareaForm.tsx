@@ -5,21 +5,29 @@ import * as React from 'react';
 type Props = {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  onBlur: (e: React.FocusEvent<HTMLTextAreaElement>) => void;
 };
 
-const textarea = css`
+const textarea = (height: string) => css`
   width: 100%;
-  height: 100%;
+  height: ${height};
   padding: 8px;
   tab-size: 2;
+  /* スクロールを表示させないために付与 */
+  overflow: hidden;
 `;
 
-export const TextareaForm = ({ value, onChange }: Props) => {
+export const TextareaForm = ({ value, onChange, onBlur }: Props) => {
   const textareaRef = React.useRef<HTMLTextAreaElement>(null);
+  const [textareaHeight, setTextareaHeight] = React.useState('auto');
 
   React.useEffect(() => {
     textareaRef.current.focus();
   }, []);
+
+  React.useEffect(() => {
+    setTextareaHeight(`${textareaRef.current!.scrollHeight}px`);
+  }, [value]);
 
   const onTabKey = (e: KeyboardEvent<HTMLTextAreaElement>) => {
     // ref: http://www.webclap-dandy.com/?category=Programing&id=5
@@ -48,11 +56,12 @@ export const TextareaForm = ({ value, onChange }: Props) => {
 
   return (
     <textarea
-      css={textarea}
+      css={textarea(textareaHeight)}
       value={value}
       ref={textareaRef}
       onKeyDown={onTabKey}
       onChange={onChange}
+      onBlur={onBlur}
     />
   );
 };
