@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import * as React from 'react';
+import { MAX_WIDTH_SP } from '../../styles/media';
 import { ModalPortal } from '../customs/ModalPortal';
 
 type Props = {
@@ -11,14 +12,21 @@ type Props = {
 const modalWrap = css`
   z-index: 10001;
   position: fixed;
-  min-width: 450px;
-  margin: 1.5em auto 0;
+  min-width: 480px;
+  margin: auto 16px;
   padding: 24px;
-  border: 2px solid #aaa;
-  background: #fff;
+  border: 4px solid #aaa;
+  border-radius: 10px;
+  background: #fffffe;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    min-width: auto;
+    left: 0;
+    transform: translate(0, -50%);
+  }
 `;
 
 const overlay = css`
