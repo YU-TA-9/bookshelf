@@ -5,6 +5,7 @@ import { useNotificationBar } from '../customs/UseNotificationBar';
 import { Button } from '../atoms/Button';
 import { Scanner } from '../atoms/Scanner';
 import { TextForm } from '../atoms/TextForm';
+import { MAX_WIDTH_SP } from '../../styles/media';
 
 type Props = {
   isbn?: string;
@@ -13,7 +14,6 @@ type Props = {
 const inputArea = css`
   display: flex;
   margin-bottom: 16px;
-  height: 32px;
 `;
 
 const textForm = css`
@@ -29,11 +29,15 @@ const barcodeOpenButton = css`
   margin-right: 16px;
 `;
 
-const scannerWrap = css`
+const scannerArea = css`
   padding: 8px;
   border: 1px solid #e4e4e4;
   width: 480px;
   height: 480px;
+
+  @media (max-width: ${MAX_WIDTH_SP}) {
+    width: 100%;
+  }
 `;
 
 export const BookRegisterForm = ({}: Props) => {
@@ -121,7 +125,7 @@ export const BookRegisterForm = ({}: Props) => {
           </Button>
         )}
       </div>
-      <div css={scannerWrap}>
+      <div css={scannerArea}>
         {openScanner ? (
           <Scanner setValue={setCode} />
         ) : (

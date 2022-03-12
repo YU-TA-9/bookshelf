@@ -8,6 +8,7 @@ const scannerHeight = 400;
 const scannerWrap = css`
   position: relative;
   text-align: center;
+  height: 100%;
 `;
 
 const marker = css`
@@ -27,10 +28,10 @@ type Props = {
 export const Scanner = ({ setValue }: Props) => {
   return (
     <div css={scannerWrap}>
-      <div css={marker}></div>
+      {/*<div css={marker} />*/}
       <BarcodeScannerComponent
-        width={scannerWidth}
-        height={scannerWidth}
+        width="100%"
+        height="100%"
         onUpdate={(err, result) => {
           //TODO: エラー処理検討
           if (result) {
