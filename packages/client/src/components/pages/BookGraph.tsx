@@ -5,18 +5,30 @@ import ReactApexCharts from 'react-apexcharts';
 import { ApexOptions } from 'apexcharts';
 import { selectedBooksPerCategory } from '../../states/selectors/book';
 import { ParagraphHeaderText } from '../atoms/ParagraphHeaderText';
+import { selectedBooksPerCreatedMonth } from '../../states/selectors/graph';
+import { MAX_WIDTH_SP_NUMBER } from '../../styles/media';
+import { css } from '@emotion/react';
+
+const graphArea = css`
+  margin-bottom: 16px;
+`;
 
 export const BookGraph = () => {
   const booksPerCategory = useRecoilValue(selectedBooksPerCategory);
-  const [options, setOptions] = React.useState<ApexOptions>({
+  const booksPerCreatedMonth = useRecoilValue(selectedBooksPerCreatedMonth);
+
+  React.useEffect(() => {
+    console.log(booksPerCreatedMonth);
+  }, [booksPerCreatedMonth]);
+
+  const pieOptions: ApexOptions = {
     chart: {
       type: 'donut',
     },
     labels: booksPerCategory.map((e) => e.category.name),
     responsive: [
       {
-        // TODO: 後で調整
-        breakpoint: 480,
+        breakpoint: MAX_WIDTH_SP_NUMBER,
         options: {
           chart: {
             width: '100%',
@@ -56,23 +68,83 @@ export const BookGraph = () => {
         },
       },
     },
-  });
+  };
 
-  const [series, setSeries] = React.useState(
-    booksPerCategory.map((e) => e.books.length),
-  );
+  const barOptions: ApexOptions = {
+    chart: {
+      type: 'bar',
+      toolbar: {
+        tools: {
+          download: false,
+        },
+      },
+    },
+    responsive: [
+      {
+        breakpoint: MAX_WIDTH_SP_NUMBER,
+        options: {
+          chart: {
+            width: '100%',
+          },
+          legend: {
+            position: 'bottom',
+          },
+        },
+      },
+    ],
+    yaxis: {
+      labels: {
+        formatter: (value) => {
+          return String(Number(value));
+        },
+      },
+    },
+    tooltip: {
+      marker: {
+        show: false,
+      },
+      x: {},
+      y: {
+        formatter: (val, opts) => {
+          return `${val}（冊）`;
+        },
+        title: {
+          formatter: (seriesName) => {
+            return null;
+          },
+        },
+      },
+    },
+  };
 
   return (
     <MainTemplate title="グラフ">
       <ParagraphHeaderText>内訳</ParagraphHeaderText>
-      <div>
+      <div css={graphArea}>
         <ReactApexCharts
-          options={options}
-          series={series}
+          options={pieOptions}
+          series={booksPerCategory.map((e) => e.books.length)}
           type="donut"
           width={400}
           height={400}
-        ></ReactApexCharts>
+        />
+      </div>
+      <ParagraphHeaderText>月毎の登録数</ParagraphHeaderText>
+      <div css={graphArea}>
+        <ReactApexCharts
+          options={barOptions}
+          series={[
+            {
+              name: '月の冊数',
+              data: booksPerCreatedMonth.map((e) => {
+                return { x: e.date, y: e.books.length };
+              }),
+            },
+          ]}
+          type="bar"
+          width={400}
+          height={400}
+        />
       </div>
     </MainTemplate>
   );
