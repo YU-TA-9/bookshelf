@@ -78,6 +78,10 @@ export class Book {
   @ApiProperty({ description: 'メモ' })
   memo: string;
 
+  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @ApiProperty({ description: '状態最終更新日' })
+  updatedStatusAt: Date;
+
   @CreateDateColumn()
   @ApiProperty({ description: '追加日' })
   readonly createdAt?: Date;
