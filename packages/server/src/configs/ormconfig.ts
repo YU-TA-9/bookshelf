@@ -25,6 +25,7 @@ export const ormconfig = () => ({
     namingStrategy: new CustomNamingStrategy(),
     bigNumberStrings: false,
     autoLoadEntities: process.env.NODE_ENV === 'test',
+    timezone: 'Z',
   },
 });
 

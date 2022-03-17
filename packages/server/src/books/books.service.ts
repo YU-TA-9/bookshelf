@@ -1,6 +1,5 @@
 import { HttpService } from '@nestjs/axios';
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   InternalServerErrorException,
@@ -152,6 +151,7 @@ export class BooksService {
       throw new NotFoundException(`Not found with ${id}`);
     }
     book.status = patchBookStatusDto.status;
+    book.updatedStatusAt = new Date();
     return await this.booksRepository.save(book);
   }
 

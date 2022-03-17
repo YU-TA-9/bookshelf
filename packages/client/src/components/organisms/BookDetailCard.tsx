@@ -101,6 +101,7 @@ export const BookDetailCard = ({ book }: Props) => {
 
     const newBook = clonedeep(book);
     newBook.status = data.status;
+    newBook.updateStatusAt = data.updatedStatusAt;
     updateBookState(newBook);
 
     notify('ステータスを更新しました');

@@ -337,6 +337,10 @@ components:
         memo:
           type: string
           description: メモ
+        updatedStatusAt:
+          format: date-time
+          type: string
+          description: 状態最終更新日
         createdAt:
           format: date-time
           type: string
@@ -355,6 +359,7 @@ components:
         - category
         - image_path
         - memo
+        - updatedStatusAt
         - createdAt
         - updatedAt
     CreateBookSelfDto:
