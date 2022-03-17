@@ -78,7 +78,11 @@ export class Book {
   @ApiProperty({ description: 'メモ' })
   memo: string;
 
-  @Column({ type: 'datetime', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'datetime',
+    precision: 6,
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
   @ApiProperty({ description: '状態最終更新日' })
   updatedStatusAt: Date;
 
