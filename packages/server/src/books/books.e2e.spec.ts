@@ -167,7 +167,7 @@ describe('Books', () => {
       .send(body);
 
     const bookFromRecord = await booksRepository.findOne({
-      where: { userId: user.id },
+      where: { userId: user.id, id: book.id },
     });
 
     expect(bookFromRecord.memo).toEqual(memo);
@@ -192,7 +192,7 @@ describe('Books', () => {
       .send(body);
 
     const bookFromRecord = await booksRepository.findOne({
-      where: { userId: user.id },
+      where: { userId: user.id, id: book.id },
     });
 
     expect(bookFromRecord.status).toEqual(status);
@@ -216,7 +216,7 @@ describe('Books', () => {
       .send(body);
 
     const bookFromRecord = await booksRepository.findOne({
-      where: { userId: user.id },
+      where: { userId: user.id, id: book.id },
     });
 
     expect(bookFromRecord.category).toEqual(category.id);
