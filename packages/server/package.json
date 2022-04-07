@@ -26,7 +26,8 @@
     "migration:show": "yarn typeorm migration:show",
     "migration:run:prod": "yarn typeorm migration:run",
     "swagger:generate": "yarn build && ts-node ./dist/src/tasks/exportOpenAPIDocument.js",
-    "swagger:check": "yarn build && ts-node ./dist/src/tasks/checkOpenAPIDocument.js"
+    "swagger:check": "yarn build && ts-node ./dist/src/tasks/checkOpenAPIDocument.js",
+    "dump-export": "yarn build && ts-node ./dist/src/tasks/dumpExport.js"
   },
   "dependencies": {
     "@faker-js/faker": "^6.0.0-alpha.6",
